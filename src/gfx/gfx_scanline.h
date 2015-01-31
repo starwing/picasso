@@ -7,8 +7,8 @@
 #ifndef _GFX_SCANLINE_H_
 #define _GFX_SCANLINE_H_
 
-#include "common.h"
-#include "data_vector.h"
+#include "../core/common.h"
+#include "../core/data_vector.h"
 
 namespace gfx {
 

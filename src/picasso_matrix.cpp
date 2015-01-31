@@ -4,9 +4,7 @@
  * Contact: onecoolx@gmail.com
  */
 
-#include "common.h"
-#include "device.h"
-#include "interfaces.h"
+#include "core/interfaces.h"
 
 #include "picasso_global.h"
 #include "picasso_matrix.h"
@@ -213,6 +211,21 @@ void trans_affine::store_to(scalar* m) const
 void trans_affine::load_from(const scalar* m)
 {
     m_impl->load_from(m);
+}
+
+bool operator == (const trans_affine& a, const trans_affine& b)
+{
+    return a.impl()->is_equal(b.impl());
+}
+
+bool operator != (const trans_affine& a, const trans_affine& b)
+{
+    return !a.impl()->is_equal(b.impl());
+}
+
+trans_affine operator * (const trans_affine& a, const trans_affine& b)
+{
+    return trans_affine(a).multiply(b);
 }
 
 }

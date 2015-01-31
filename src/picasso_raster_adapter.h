@@ -7,23 +7,16 @@
 #ifndef _PICASSO_RASTER_ADAPTER_H_
 #define _PICASSO_RASTER_ADAPTER_H_
 
-#include "common.h"
 
-enum {
-    STA_WIDTH,
-    STA_LINE_CAP,
-    STA_LINE_JOIN,
-    STA_INNER_JOIN,
-    STA_MITER_LIMIT,
-};
+#include "core/common.h"
+#include "core/graphic_base.h"
 
-enum {
-    FIA_FILL_RULE,
-};
 
 namespace picasso {
 
 class trans_affine;
+class vertex_source;
+class abstract_raster_adapter;
 
 class raster_adapter
 {
@@ -56,6 +49,7 @@ private:
     abstract_raster_adapter * m_impl;
 };
 
-}
-#endif/*_PICASSO_RASTER_ADAPTER_H_*/
 
+}
+
+#endif/*_PICASSO_RASTER_ADAPTER_H_*/

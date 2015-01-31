@@ -57,7 +57,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 
 ATOM MyRegisterClass(HINSTANCE hInstance)
 {
-    WNDCLASSEX wcex;
+    WNDCLASSEXW wcex;
     
     wcex.cbSize = sizeof(WNDCLASSEX); 
     
@@ -73,14 +73,14 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.lpszClassName    = L"AppDemo";
     wcex.hIconSm        = 0;
     
-    return RegisterClassEx(&wcex);
+    return RegisterClassExW(&wcex);
 }
 
 
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
     hInst = hInstance;
-    hmWnd = CreateWindow(L"AppDemo", L"Picasso Demos", WS_OVERLAPPEDWINDOW,
+    hmWnd = CreateWindowW(L"AppDemo", L"Picasso Demos", WS_OVERLAPPEDWINDOW,
         0, 0, width, height, NULL, NULL, hInstance, NULL);
     if (!hmWnd)
     {

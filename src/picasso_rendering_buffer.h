@@ -7,25 +7,27 @@
 #ifndef _PICASSO_RENDERING_BUFFER_H_
 #define _PICASSO_RENDERING_BUFFER_H_
 
-#include "common.h"
-#include "device.h"
-#include "color_type.h"
-#include "interfaces.h"
+
+#include "core/common.h"
+#include "core/color_type.h"
+
 
 namespace picasso {
+
+class abstract_rendering_buffer;
 
 class rendering_buffer
 {
 public:
     rendering_buffer();
-    rendering_buffer(byte* buf, unsigned int width, unsigned int height, int stride);
+    rendering_buffer(void* buf, unsigned int width, unsigned int height, int stride);
     ~rendering_buffer();
 public:
-    void attach(byte* buf, unsigned int width, unsigned int height, int stride);
-    void replace(byte* buf, unsigned int width, unsigned int height, int stride);
+    void attach(void* buf, unsigned int width, unsigned int height, int stride);
+    void replace(void* buf, unsigned int width, unsigned int height, int stride);
     bool is_empty(void);
 
-    byte * buffer(void) const;
+    void* buffer(void) const;
     unsigned int width(void) const;
     unsigned int height(void) const;
     int stride(void) const;
@@ -47,4 +49,5 @@ private:
 };
 
 }
+
 #endif/*_PICASSO_RENDERING_BUFFER_H_*/

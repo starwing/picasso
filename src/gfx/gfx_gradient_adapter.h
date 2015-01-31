@@ -7,16 +7,20 @@
 #ifndef _GFX_GRADIENT_ADAPTER_H_
 #define _GFX_GRADIENT_ADAPTER_H_
 
-#include "common.h"
-#include "interfaces.h"
+#include "../core/common.h"
+#include "../core/interfaces.h"
 
 #include "pixfmt_wrapper.h"
 #include "gfx_span_generator.h"
 #include "gfx_trans_affine.h"
 
-#include "picasso_gradient.h"
-
 namespace gfx {
+
+enum {
+    SPREAD_PAD,
+    SPREAD_REPEAT,
+    SPREAD_REFLECT,
+};
 
 // gradient wrapper interface
 class gfx_gradient_wrapper 

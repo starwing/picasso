@@ -7,13 +7,14 @@
 #ifndef _PICASSO_FONT_H_
 #define _PICASSO_FONT_H_
 
-#include "common.h"
-#include "device.h"
-#include "interfaces.h"
+#include "core/common.h"
+#include "core/device.h"
+#include "core/interfaces.h"
+#include "core/graphic_path.h"
+#include "gfx/gfx_font_adapter.h"
 
-#include "graphic_path.h"
-#include "picasso_global.h"
 #include "picasso_matrix.h"
+#include "picasso_global.h"
 #include "picasso_font_cache.h"
 
 #if ENABLE(LOW_MEMORY)
@@ -26,23 +27,18 @@
 
 namespace picasso {
 
-enum {
-    charset_latin,
-    charset_unicode,
-};
-
 // font desc
 class font_desc
 {
 public:
     font_desc()
-        : m_name(0), m_charset(charset_latin)
+        : m_name(0), m_charset(gfx::charset_latin)
         , m_height(0), m_weight(0), m_italic(false), m_hint(false), m_flip_y(false)
     {
     }
 
     font_desc(const char* face_name)
-        : m_name(0), m_charset(charset_latin)
+        : m_name(0), m_charset(gfx::charset_latin)
         , m_height(0), m_weight(0), m_italic(false), m_hint(false), m_flip_y(false)
     {
         size_t len = MIN(strlen(face_name)+1, MAX_FONT_NAME_LENGTH);
@@ -157,7 +153,7 @@ public:
         font = f;
     }
 
-    void serialize_from(byte* data, unsigned int size, scalar x, scalar y)
+    void serialize_from(void* data, unsigned int size, scalar x, scalar y)
     {
         if (font) {
             if (storage) 

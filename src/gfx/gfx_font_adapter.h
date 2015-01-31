@@ -7,12 +7,15 @@
 #ifndef _GFX_FONT_ADAPTER_H_
 #define _GFX_FONT_ADAPTER_H_
 
-#include "common.h"
-#include "interfaces.h"
-
-#include "picasso_font.h"
+#include "../core/common.h"
+#include "../core/interfaces.h"
 
 namespace gfx {
+
+enum {
+    charset_latin,
+    charset_unicode,
+};
 
 class font_adapter_impl;
 
@@ -33,7 +36,7 @@ public:
     virtual void deactive(void);
 
     virtual bool prepare_glyph(unsigned int code);
-    virtual void write_glyph_to(byte* buffer);
+    virtual void write_glyph_to(void* buffer);
     virtual void add_kerning(unsigned int f, unsigned int s, scalar* x, scalar* y);
 
     virtual unsigned int glyph_index(void) const; 
@@ -43,7 +46,7 @@ public:
     virtual scalar advance_x(void) const; 
     virtual scalar advance_y(void) const;
 
-    virtual void* create_storage(byte* buf, unsigned int len, scalar x, scalar y);
+    virtual void* create_storage(void* buf, unsigned int len, scalar x, scalar y);
     virtual void destroy_storage(void*);
     virtual void translate_storage(void*, scalar x, scalar y);
 private:

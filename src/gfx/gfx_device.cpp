@@ -4,9 +4,9 @@
  * Contact: onecoolx@gmail.com
  */
 
-#include "common.h"
-#include "math_type.h"
-#include "color_type.h"
+#include "../core/common.h"
+#include "../core/math_type.h"
+#include "../core/color_type.h"
 
 #include "gfx_device.h"
 #include "gfx_painter.h"
@@ -101,7 +101,7 @@ void gfx_device::destroy_raster_adapter(abstract_raster_adapter* d)
     delete d;
 }
 
-abstract_rendering_buffer* gfx_device::create_rendering_buffer(byte* buf, 
+abstract_rendering_buffer* gfx_device::create_rendering_buffer(void* buf, 
                                         unsigned int width, unsigned int height, int stride)
 {
     return new gfx_rendering_buffer(buf, width, height, stride);
@@ -112,7 +112,7 @@ void gfx_device::destroy_rendering_buffer(abstract_rendering_buffer* b)
     delete b;
 }
 
-abstract_mask_layer* gfx_device::create_mask_layer(byte* buf,
+abstract_mask_layer* gfx_device::create_mask_layer(void* buf,
                                         unsigned int width, unsigned int height, int stride)
 {
     return new gfx_mask_layer(buf, width, height, stride);

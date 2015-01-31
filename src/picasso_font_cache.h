@@ -7,10 +7,8 @@
 #ifndef _PICASSO_FONT_CACHE_H_
 #define _PICASSO_FONT_CACHE_H_
 
-#include "common.h"
-#include "data_vector.h"
-#include "device.h"
-#include "interfaces.h"
+#include "core/common.h"
+#include "core/device.h"
 
 #if ENABLE(LOW_MEMORY)
 #define MAX_CACHE 256

@@ -7,17 +7,8 @@
 #ifndef _PICASSO_PAINTER_H_
 #define _PICASSO_PAINTER_H_
 
-#include "common.h"
-#include "device.h"
-#include "vertex.h"
-#include "color_type.h"
-#include "interfaces.h"
-
-enum {
-    TEXT_SMOOTH,
-    TEXT_MONO,
-    TEXT_STROKE,
-};
+#include "core/common.h"
+#include "core/color_type.h"
 
 namespace picasso {
 
@@ -29,6 +20,9 @@ class font_adapter;
 class graphic_path;
 class trans_affine;
 class mask_layer;
+
+class vertex_source;
+class abstract_painter;
 
 class painter {
 public:

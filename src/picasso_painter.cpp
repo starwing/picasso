@@ -4,14 +4,10 @@
  * Contact: onecoolx@gmail.com
  */
 
-#include "common.h"
-#include "device.h"
-#include "interfaces.h"
-#include "convert.h"
-#include "graphic_path.h"
-#include "graphic_helper.h"
+#include "core/graphic_path.h"
+#include "core/graphic_helper.h"
+#include "gfx/gfx_raster_adapter.h"
 
-#include "picasso.h"
 #include "picasso_global.h"
 #include "picasso_painter.h"
 #include "picasso_objects.h"
@@ -43,15 +39,15 @@ void painter::init_raster_data(context_state* state, unsigned int methods,
         if (state->pen.style == pen_style_dash) 
             raster.set_stroke_dashes(state->pen.dstart, state->pen.dashes, state->pen.ndashes); //dash line
 
-        raster.set_stroke_attr_val(STA_WIDTH, state->pen.width);
-        raster.set_stroke_attr_val(STA_MITER_LIMIT, state->pen.miter_limit);
-        raster.set_stroke_attr(STA_LINE_CAP, state->pen.cap);
-        raster.set_stroke_attr(STA_LINE_JOIN, state->pen.join);
-        raster.set_stroke_attr(STA_INNER_JOIN, state->pen.inner);
+        raster.set_stroke_attr_val(gfx::STA_WIDTH, state->pen.width);
+        raster.set_stroke_attr_val(gfx::STA_MITER_LIMIT, state->pen.miter_limit);
+        raster.set_stroke_attr(gfx::STA_LINE_CAP, state->pen.cap);
+        raster.set_stroke_attr(gfx::STA_LINE_JOIN, state->pen.join);
+        raster.set_stroke_attr(gfx::STA_INNER_JOIN, state->pen.inner);
     }
 
     if (methods & raster_fill) {
-        raster.set_fill_attr(FIA_FILL_RULE, state->brush.rule);
+        raster.set_fill_attr(gfx::FIA_FILL_RULE, state->brush.rule);
     }
 
     raster.set_transform(mtx);
@@ -195,7 +191,7 @@ void painter::render_shadow(context_state* state, const graphic_path& p, bool fi
             method |= raster_stroke;
 
         scalar x1 = 1, y1 = 1, x2 = 0 ,y2 = 0;
-        conv_transform tp(p, state->world_matrix);
+        conv_transform tp(p, state->world_matrix.impl());
         bounding_rect(tp, 0, &x1, &y1, &x2, &y2);
 
         //FIXME: it is hard code here right?

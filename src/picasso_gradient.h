@@ -7,15 +7,8 @@
 #ifndef _PICASSO_GRADIENT_H_
 #define _PICASSO_GRADIENT_H_
 
-#include "common.h"
-#include "device.h"
-#include "interfaces.h"
-
-enum {
-    SPREAD_PAD,
-    SPREAD_REPEAT,
-    SPREAD_REFLECT,
-};
+#include "core/common.h"
+#include "core/interfaces.h"
 
 namespace picasso {
 

@@ -7,9 +7,9 @@
 #ifndef _GFX_RASTERIZER_CELL_H_
 #define _GFX_RASTERIZER_CELL_H_
 
-#include "common.h"
-
-#include "graphic_base.h"
+#include "../core/common.h"
+#include "../core/data_vector.h"
+#include "../core/graphic_base.h"
 
 namespace gfx {
 

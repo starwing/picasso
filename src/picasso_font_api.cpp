@@ -4,10 +4,6 @@
  * Contact: onecoolx@gmail.com
  */
 
-#include "common.h"
-#include "device.h"
-
-#include "picasso.h"
 #include "picasso_global.h"
 #include "picasso_font.h"
 #include "picasso_objects.h"
@@ -73,15 +69,15 @@ static inline void _add_glyph_to_path(ps_context* ctx, picasso::graphic_path& pa
 extern "C" {
 #endif
 
-ps_font* PICAPI ps_font_create_copy(const ps_font* font)
+PIC_API ps_font* ps_font_create_copy(const ps_font* font)
 {
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
+        picasso_status = STATUS_DEVICE_ERROR;
         return 0;
     }
 
     if (!font) {
-        global_status = STATUS_INVALID_ARGUMENT;
+        picasso_status = STATUS_INVALID_ARGUMENT;
         return 0;
     }
 
@@ -95,23 +91,23 @@ ps_font* PICAPI ps_font_create_copy(const ps_font* font)
         f->desc.set_italic(font->desc.italic());
         f->desc.set_hint(font->desc.hint());
         f->desc.set_flip_y(font->desc.flip_y());
-        global_status = STATUS_SUCCEED;
+        picasso_status = STATUS_SUCCEED;
         return f;
     } else {
-        global_status = STATUS_OUT_OF_MEMORY;
+        picasso_status = STATUS_OUT_OF_MEMORY;
         return 0;
     }
 }
 
-ps_font* PICAPI ps_font_create(const char* name, ps_charset c, float s, int w, ps_bool i)
+PIC_API ps_font* ps_font_create(const char* name, ps_charset c, float s, int w, int i)
 {
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
+        picasso_status = STATUS_DEVICE_ERROR;
         return 0;
     }
 
     if (!name) {
-        global_status = STATUS_INVALID_ARGUMENT;
+        picasso_status = STATUS_INVALID_ARGUMENT;
         return 0;
     }
 
@@ -125,40 +121,40 @@ ps_font* PICAPI ps_font_create(const char* name, ps_charset c, float s, int w, p
         f->desc.set_italic(i ? true: false);
         f->desc.set_hint(true);
         f->desc.set_flip_y(true);
-        global_status = STATUS_SUCCEED;
+        picasso_status = STATUS_SUCCEED;
         return f;
     } else {
-        global_status = STATUS_OUT_OF_MEMORY;
+        picasso_status = STATUS_OUT_OF_MEMORY;
         return 0;
     }
 }
 
-ps_font* PICAPI ps_font_ref(ps_font* f)
+PIC_API ps_font* ps_font_ref(ps_font* f)
 {
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
+        picasso_status = STATUS_DEVICE_ERROR;
         return 0;
     }
 
     if (!f) {
-        global_status = STATUS_INVALID_ARGUMENT;
+        picasso_status = STATUS_INVALID_ARGUMENT;
         return 0;
     }
 
     f->refcount++;
-    global_status = STATUS_SUCCEED;
+    picasso_status = STATUS_SUCCEED;
     return f;
 }
 
-void PICAPI ps_font_unref(ps_font* f)
+PIC_API void ps_font_unref(ps_font* f)
 {
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
+        picasso_status = STATUS_DEVICE_ERROR;
         return;
     }
 
     if (!f) {
-        global_status = STATUS_INVALID_ARGUMENT;
+        picasso_status = STATUS_INVALID_ARGUMENT;
         return;
     }
 
@@ -166,115 +162,115 @@ void PICAPI ps_font_unref(ps_font* f)
     if (f->refcount <= 0) {
         mem_free(f);
     }
-    global_status = STATUS_SUCCEED;
+    picasso_status = STATUS_SUCCEED;
 }
 
-void PICAPI ps_font_set_size(ps_font* f, float s)
+PIC_API void ps_font_set_size(ps_font* f, float s)
 {
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
+        picasso_status = STATUS_DEVICE_ERROR;
         return;
     }
 
     if (!f || s < 0.0) {
-        global_status = STATUS_INVALID_ARGUMENT;
+        picasso_status = STATUS_INVALID_ARGUMENT;
         return;
     }
     
     f->desc.set_height(FLT_TO_SCALAR(s));
-    global_status = STATUS_SUCCEED;
+    picasso_status = STATUS_SUCCEED;
 }
 
-void PICAPI ps_font_set_weight(ps_font* f, int w)
+PIC_API void ps_font_set_weight(ps_font* f, int w)
 {
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
+        picasso_status = STATUS_DEVICE_ERROR;
         return;
     }
 
     if (!f || w < 100 || w > 900) {
-        global_status = STATUS_INVALID_ARGUMENT;
+        picasso_status = STATUS_INVALID_ARGUMENT;
         return;
     }
 
     f->desc.set_weight(FLT_TO_SCALAR(w));
-    global_status = STATUS_SUCCEED;
+    picasso_status = STATUS_SUCCEED;
 }
 
-void PICAPI ps_font_set_italic(ps_font* f, ps_bool it)
+PIC_API void ps_font_set_italic(ps_font* f, int it)
 {
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
+        picasso_status = STATUS_DEVICE_ERROR;
         return;
     }
 
     if (!f) {
-        global_status = STATUS_INVALID_ARGUMENT;
+        picasso_status = STATUS_INVALID_ARGUMENT;
         return;
     }
 
     f->desc.set_italic(it ? true : false);
-    global_status = STATUS_SUCCEED;
+    picasso_status = STATUS_SUCCEED;
 }
 
-void PICAPI ps_font_set_hint(ps_font* f, ps_bool h)
+PIC_API void ps_font_set_hint(ps_font* f, int h)
 {
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
+        picasso_status = STATUS_DEVICE_ERROR;
         return;
     }
 
     if (!f) {
-        global_status = STATUS_INVALID_ARGUMENT;
+        picasso_status = STATUS_INVALID_ARGUMENT;
         return;
     }
 
     f->desc.set_hint(h ? true : false);
-    global_status = STATUS_SUCCEED;
+    picasso_status = STATUS_SUCCEED;
 }
 
-void PICAPI ps_font_set_flip(ps_font* f, ps_bool l)
+PIC_API void ps_font_set_flip(ps_font* f, int l)
 {
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
+        picasso_status = STATUS_DEVICE_ERROR;
         return;
     }
 
     if (!f) {
-        global_status = STATUS_INVALID_ARGUMENT;
+        picasso_status = STATUS_INVALID_ARGUMENT;
         return;
     }
     
     //Note: FIXME:this will change next time.
     f->desc.set_flip_y(l ? false : true);
-    global_status = STATUS_SUCCEED;
+    picasso_status = STATUS_SUCCEED;
 }
 
-void PICAPI ps_font_set_charset(ps_font* f, ps_charset c)
+PIC_API void ps_font_set_charset(ps_font* f, ps_charset c)
 {
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
+        picasso_status = STATUS_DEVICE_ERROR;
         return;
     }
 
     if (!f) {
-        global_status = STATUS_INVALID_ARGUMENT;
+        picasso_status = STATUS_INVALID_ARGUMENT;
         return;
     }
 
     f->desc.set_charset(c);
-    global_status = STATUS_SUCCEED;
+    picasso_status = STATUS_SUCCEED;
 }
 
-void PICAPI ps_text_out_length(ps_context* ctx, float x, float y, const char* text, unsigned int len)
+PIC_API void ps_text_out_length(ps_context* ctx, float x, float y, const char* text, unsigned int len)
 {
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
+        picasso_status = STATUS_DEVICE_ERROR;
         return;
     }
 
     if (!ctx || !text || !len) {
-        global_status = STATUS_INVALID_ARGUMENT;
+        picasso_status = STATUS_INVALID_ARGUMENT;
         return;
     }
 
@@ -302,18 +298,18 @@ void PICAPI ps_text_out_length(ps_context* ctx, float x, float y, const char* te
         }
         ctx->canvas->p->render_glyphs_raster(ctx->state, ctx->raster, ctx->font_render_type);
     }
-    global_status = STATUS_SUCCEED;
+    picasso_status = STATUS_SUCCEED;
 }
 
-void PICAPI ps_wide_text_out_length(ps_context* ctx, float x, float y, const ps_uchar16* text, unsigned int len)
+PIC_API void ps_wide_text_out_length(ps_context* ctx, float x, float y, const wchar_t* text, unsigned int len)
 {
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
+        picasso_status = STATUS_DEVICE_ERROR;
         return;
     }
 
     if (!ctx || !text || !len) {
-        global_status = STATUS_INVALID_ARGUMENT;
+        picasso_status = STATUS_INVALID_ARGUMENT;
         return;
     }
 
@@ -323,9 +319,9 @@ void PICAPI ps_wide_text_out_length(ps_context* ctx, float x, float y, const ps_
     if (create_device_font(ctx)) {
         gy += ctx->fonts->current_font()->ascent();
 
-        const ps_uchar16* p = text;
+        const wchar_t* p = text;
         while (*p && len) {
-            register ps_uchar16 c = *p;
+            register wchar_t c = *p;
             const picasso::glyph* glyph = ctx->fonts->current_font()->get_glyph(c);
             if (glyph) {
                 if (ctx->font_kerning)
@@ -341,19 +337,19 @@ void PICAPI ps_wide_text_out_length(ps_context* ctx, float x, float y, const ps_
         }
         ctx->canvas->p->render_glyphs_raster(ctx->state, ctx->raster, ctx->font_render_type);
     }
-    global_status = STATUS_SUCCEED;
+    picasso_status = STATUS_SUCCEED;
 }
 
-void PICAPI ps_draw_text(ps_context* ctx, const ps_rect* area, const void* text, unsigned int len,
+PIC_API void ps_draw_text(ps_context* ctx, const ps_rect* area, const void* text, unsigned int len,
                                                                 ps_draw_text_type type, ps_text_align align)
 {
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
+        picasso_status = STATUS_DEVICE_ERROR;
         return;
     }
 
     if (!ctx || !area || !text || !len) {
-        global_status = STATUS_INVALID_ARGUMENT;
+        picasso_status = STATUS_INVALID_ARGUMENT;
         return;
     }
 
@@ -362,8 +358,8 @@ void PICAPI ps_draw_text(ps_context* ctx, const ps_rect* area, const void* text,
 
     picasso::graphic_path text_path;
 
-    ps_bool text_antialias = ctx->font_antialias;
-    ctx->font_antialias = True;
+    int text_antialias = ctx->font_antialias;
+    ctx->font_antialias = 1;
     if (create_device_font(ctx)) {
 
         // align layout
@@ -374,7 +370,7 @@ void PICAPI ps_draw_text(ps_context* ctx, const ps_rect* area, const void* text,
             const char* p = (const char*)text;
             glyph_test = ctx->fonts->current_font()->get_glyph(*p);
         } else {
-            const ps_uchar16* p = (const ps_uchar16*)text;
+            const wchar_t* p = (const wchar_t*)text;
             glyph_test = ctx->fonts->current_font()->get_glyph(*p);
         }
 
@@ -422,9 +418,9 @@ void PICAPI ps_draw_text(ps_context* ctx, const ps_rect* area, const void* text,
                 p++;
             }
         } else {
-            const ps_uchar16* p = (const ps_uchar16*)text;
+            const wchar_t* p = (const wchar_t*)text;
             while (*p && len) {
-                register ps_uchar16 c = *p;
+                register wchar_t c = *p;
                 const picasso::glyph* glyph = ctx->fonts->current_font()->get_glyph(c);
                 if (glyph) {
                     if (ctx->font_kerning)
@@ -472,20 +468,20 @@ void PICAPI ps_draw_text(ps_context* ctx, const ps_rect* area, const void* text,
     ctx->state->brush.color = bc;
     ctx->state->pen.color = pc;
     ctx->raster.reset();
-    global_status = STATUS_SUCCEED;
+    picasso_status = STATUS_SUCCEED;
 }
 
-ps_size PICAPI ps_get_text_extent(ps_context* ctx, const void* text, unsigned int len)
+PIC_API ps_size ps_get_text_extent(ps_context* ctx, const void* text, unsigned int len)
 {
     ps_size size = {0 , 0};
 
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
+        picasso_status = STATUS_DEVICE_ERROR;
         return size;
     }
 
     if (!ctx || !text || !len) {
-        global_status = STATUS_INVALID_ARGUMENT;
+        picasso_status = STATUS_INVALID_ARGUMENT;
         return size;
     }
 
@@ -505,9 +501,9 @@ ps_size PICAPI ps_get_text_extent(ps_context* ctx, const void* text, unsigned in
                 p++;
             }
         } else {
-            const ps_uchar16* p = (const ps_uchar16*)text;
+            const wchar_t* p = (const wchar_t*)text;
             while (*p && len) {
-                register ps_uchar16 c = *p;
+                register wchar_t c = *p;
                 const picasso::glyph* glyph = ctx->fonts->current_font()->get_glyph(c);
                 if (glyph) 
                     width += glyph->advance_x;
@@ -520,19 +516,19 @@ ps_size PICAPI ps_get_text_extent(ps_context* ctx, const void* text, unsigned in
 
     size.h = SCALAR_TO_FLT(ctx->fonts->current_font()->height());
     size.w = SCALAR_TO_FLT(width);
-    global_status = STATUS_SUCCEED;
+    picasso_status = STATUS_SUCCEED;
     return size;
 }
 
-void PICAPI ps_show_glyphs(ps_context* ctx, float x, float y, ps_glyph* g, unsigned int len)
+PIC_API void ps_show_glyphs(ps_context* ctx, float x, float y, ps_glyph* g, unsigned int len)
 {
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
+        picasso_status = STATUS_DEVICE_ERROR;
         return;
     }
 
     if (!ctx || !g || !len) {
-        global_status = STATUS_INVALID_ARGUMENT;
+        picasso_status = STATUS_INVALID_ARGUMENT;
         return;
     }
 
@@ -555,19 +551,19 @@ void PICAPI ps_show_glyphs(ps_context* ctx, float x, float y, ps_glyph* g, unsig
         }
         ctx->canvas->p->render_glyphs_raster(ctx->state, ctx->raster, ctx->font_render_type);
     }
-    global_status = STATUS_SUCCEED;
+    picasso_status = STATUS_SUCCEED;
 }
 
-ps_bool PICAPI ps_get_path_from_glyph(ps_context* ctx, const ps_glyph* g, ps_path* p)
+PIC_API int ps_get_path_from_glyph(ps_context* ctx, const ps_glyph* g, ps_path* p)
 {
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
-        return False;
+        picasso_status = STATUS_DEVICE_ERROR;
+        return 0;
     }
 
     if (!ctx || !g || !p) {
-        global_status = STATUS_INVALID_ARGUMENT;
-        return False;
+        picasso_status = STATUS_INVALID_ARGUMENT;
+        return 0;
     }
 
     p->path.remove_all(); // clear the path
@@ -575,8 +571,8 @@ ps_bool PICAPI ps_get_path_from_glyph(ps_context* ctx, const ps_glyph* g, ps_pat
     scalar x = 0;
     scalar y = 0;
 
-    ps_bool text_antialias = ctx->font_antialias;
-    ctx->font_antialias = True;
+    int text_antialias = ctx->font_antialias;
+    ctx->font_antialias = 1;
     if (create_device_font(ctx)) {
         const picasso::glyph* gly = (const picasso::glyph*)g->glyph;
         if (gly) {
@@ -593,20 +589,20 @@ ps_bool PICAPI ps_get_path_from_glyph(ps_context* ctx, const ps_glyph* g, ps_pat
 
     p->path.close_polygon();
     ctx->font_antialias = text_antialias;
-    global_status = STATUS_SUCCEED;
-    return True;
+    picasso_status = STATUS_SUCCEED;
+    return 1;
 }
 
-ps_bool PICAPI ps_get_glyph(ps_context* ctx, int ch, ps_glyph* g)
+PIC_API int ps_get_glyph(ps_context* ctx, int ch, ps_glyph* g)
 {
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
-        return False;
+        picasso_status = STATUS_DEVICE_ERROR;
+        return 0;
     }
 
     if (!ctx || !g) {
-        global_status = STATUS_INVALID_ARGUMENT;
-        return False;
+        picasso_status = STATUS_INVALID_ARGUMENT;
+        return 0;
     }
 
     if (create_device_font(ctx)) {
@@ -614,28 +610,28 @@ ps_bool PICAPI ps_get_glyph(ps_context* ctx, int ch, ps_glyph* g)
             char c = (char)ch;
             g->glyph = (void*)ctx->fonts->current_font()->get_glyph(c);
         } else {
-            ps_uchar16 c = (ps_uchar16)ch;
+            wchar_t c = (wchar_t)ch;
             g->glyph = (void*)ctx->fonts->current_font()->get_glyph(c);
         }
-        global_status = STATUS_SUCCEED;
-        return True;
+        picasso_status = STATUS_SUCCEED;
+        return 1;
     } else {
         g->glyph = NULL;
-        global_status = STATUS_UNKNOWN_ERROR;
-        return False;
+        picasso_status = STATUS_UNKNOWN_ERROR;
+        return 0;
     }
 }
 
-ps_size PICAPI ps_glyph_get_extent(const ps_glyph* g)
+PIC_API ps_size ps_glyph_get_extent(const ps_glyph* g)
 {
     ps_size size = {0 , 0};
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
+        picasso_status = STATUS_DEVICE_ERROR;
         return size;
     }
 
     if (!g) {
-        global_status = STATUS_INVALID_ARGUMENT;
+        picasso_status = STATUS_INVALID_ARGUMENT;
         return size;
     }
 
@@ -644,20 +640,20 @@ ps_size PICAPI ps_glyph_get_extent(const ps_glyph* g)
         size.w = SCALAR_TO_FLT(gp->advance_x);
         size.h = SCALAR_TO_FLT(gp->height); //Note: advance_y is 0
     }
-    global_status = STATUS_SUCCEED;
+    picasso_status = STATUS_SUCCEED;
     return size;
 }
 
-ps_bool PICAPI ps_get_font_info(ps_context* ctx, ps_font_info* info)
+PIC_API int ps_get_font_info(ps_context* ctx, ps_font_info* info)
 {
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
-        return False;
+        picasso_status = STATUS_DEVICE_ERROR;
+        return 0;
     }
 
     if (!ctx || !info) {
-        global_status = STATUS_INVALID_ARGUMENT;
-        return False;
+        picasso_status = STATUS_INVALID_ARGUMENT;
+        return 0;
     }
 
     if (create_device_font(ctx)) {
@@ -666,145 +662,145 @@ ps_bool PICAPI ps_get_font_info(ps_context* ctx, ps_font_info* info)
         info->descent = SCALAR_TO_FLT(ctx->fonts->current_font()->descent());
         info->leading = SCALAR_TO_FLT(ctx->fonts->current_font()->leading());
         info->unitsEM = SCALAR_TO_INT(ctx->fonts->current_font()->units_per_em());
-        global_status = STATUS_SUCCEED;
-        return True;
+        picasso_status = STATUS_SUCCEED;
+        return 1;
     }
 
-    global_status = STATUS_UNKNOWN_ERROR;
-    return False;
+    picasso_status = STATUS_UNKNOWN_ERROR;
+    return 0;
 }
 
-ps_font* PICAPI ps_set_font(ps_context* ctx, const ps_font* f)
+PIC_API ps_font* ps_set_font(ps_context* ctx, const ps_font* f)
 {
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
+        picasso_status = STATUS_DEVICE_ERROR;
         return 0;
     }
 
     if (!ctx || !f) {
-        global_status = STATUS_INVALID_ARGUMENT;
+        picasso_status = STATUS_INVALID_ARGUMENT;
         return 0;
     }
 
     ps_font* old = ctx->state->font;
     ps_font_unref(ctx->state->font);
     ctx->state->font = ps_font_ref(const_cast<ps_font*>(f));
-    global_status = STATUS_SUCCEED;
+    picasso_status = STATUS_SUCCEED;
     return old;
 }
 
-void PICAPI ps_set_text_render_type(ps_context* ctx, ps_text_type type)
+PIC_API void ps_set_text_render_type(ps_context* ctx, ps_text_type type)
 {
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
+        picasso_status = STATUS_DEVICE_ERROR;
         return;
     }
 
     if (!ctx) {
-        global_status = STATUS_INVALID_ARGUMENT;
+        picasso_status = STATUS_INVALID_ARGUMENT;
         return;
     }
 
     ctx->font_render_type = type;
-    global_status = STATUS_SUCCEED;
+    picasso_status = STATUS_SUCCEED;
 }
 
-void PICAPI ps_set_text_kerning(ps_context* ctx, ps_bool k)
+PIC_API void ps_set_text_kerning(ps_context* ctx, int k)
 {
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
+        picasso_status = STATUS_DEVICE_ERROR;
         return;
     }
 
     if (!ctx) {
-        global_status = STATUS_INVALID_ARGUMENT;
+        picasso_status = STATUS_INVALID_ARGUMENT;
         return;
     }
     
     ctx->font_kerning = k;
-    global_status = STATUS_SUCCEED;
+    picasso_status = STATUS_SUCCEED;
 }
 
-void PICAPI ps_set_text_antialias(ps_context* ctx, ps_bool a)
+PIC_API void ps_set_text_antialias(ps_context* ctx, int a)
 {
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
+        picasso_status = STATUS_DEVICE_ERROR;
         return;
     }
 
     if (!ctx) {
-        global_status = STATUS_INVALID_ARGUMENT;
+        picasso_status = STATUS_INVALID_ARGUMENT;
         return;
     }
 
     ctx->font_antialias = a;
-    global_status = STATUS_SUCCEED;
+    picasso_status = STATUS_SUCCEED;
 }
 
-void PICAPI ps_set_text_color(ps_context* ctx, const ps_color* c)
+PIC_API void ps_set_text_color(ps_context* ctx, const ps_color* c)
 {
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
+        picasso_status = STATUS_DEVICE_ERROR;
         return;
     }
 
     if (!ctx || !c) {
-        global_status = STATUS_INVALID_ARGUMENT;
+        picasso_status = STATUS_INVALID_ARGUMENT;
         return;
     }
 
     ctx->state->font_fcolor =
          picasso::rgba(FLT_TO_SCALAR(c->r), FLT_TO_SCALAR(c->g), FLT_TO_SCALAR(c->b), FLT_TO_SCALAR(c->a));
-    global_status = STATUS_SUCCEED;
+    picasso_status = STATUS_SUCCEED;
 }
 
-void PICAPI ps_set_text_stroke_color(ps_context* ctx, const ps_color* c)
+PIC_API void ps_set_text_stroke_color(ps_context* ctx, const ps_color* c)
 {
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
+        picasso_status = STATUS_DEVICE_ERROR;
         return;
     }
 
     if (!ctx || !c) {
-        global_status = STATUS_INVALID_ARGUMENT;
+        picasso_status = STATUS_INVALID_ARGUMENT;
         return;
     }
 
     ctx->state->font_scolor =
          picasso::rgba(FLT_TO_SCALAR(c->r), FLT_TO_SCALAR(c->g), FLT_TO_SCALAR(c->b), FLT_TO_SCALAR(c->a));
-    global_status = STATUS_SUCCEED;
+    picasso_status = STATUS_SUCCEED;
 }
 
-void PICAPI ps_text_transform(ps_context* ctx, const ps_matrix* m)
+PIC_API void ps_text_transform(ps_context* ctx, const ps_matrix* m)
 {
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
+        picasso_status = STATUS_DEVICE_ERROR;
         return;
     }
 
     if (!ctx || !m) {
-        global_status = STATUS_INVALID_ARGUMENT;
+        picasso_status = STATUS_INVALID_ARGUMENT;
         return;
     }
 
     ctx->text_matrix *= m->matrix;
-    global_status = STATUS_SUCCEED;
+    picasso_status = STATUS_SUCCEED;
 }
 
-void PICAPI ps_set_text_matrix(ps_context* ctx, const ps_matrix* m)
+PIC_API void ps_set_text_matrix(ps_context* ctx, const ps_matrix* m)
 {
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
+        picasso_status = STATUS_DEVICE_ERROR;
         return;
     }
 
     if (!ctx || !m) {
-        global_status = STATUS_INVALID_ARGUMENT;
+        picasso_status = STATUS_INVALID_ARGUMENT;
         return;
     }
 
     ctx->text_matrix = m->matrix;
-    global_status = STATUS_SUCCEED;
+    picasso_status = STATUS_SUCCEED;
 }
 
 #ifdef __cplusplus

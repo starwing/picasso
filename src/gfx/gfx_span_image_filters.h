@@ -7,8 +7,8 @@
 #ifndef _GFX_SPAN_IMAGE_FILTERS_H_
 #define _GFX_SPAN_IMAGE_FILTERS_H_
 
-#include "common.h"
-#include "graphic_base.h"
+#include "../core/common.h"
+#include "../core/graphic_base.h"
 
 #include "gfx_image_filters.h"
 #include "gfx_span_generator.h"

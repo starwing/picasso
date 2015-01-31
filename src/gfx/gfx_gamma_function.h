@@ -7,7 +7,7 @@
 #ifndef _GFX_GAMMA_FUNCTION_H_
 #define _GFX_GAMMA_FUNCTION_H_
 
-#include "common.h"
+#include "../core/common.h"
 
 namespace gfx {
 

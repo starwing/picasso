@@ -7,7 +7,7 @@
 #ifndef _GFX_MATH_H_
 #define _GFX_MATH_H_
 
-#include "common.h"
+#include "../core/common.h"
 
 namespace gfx {
 

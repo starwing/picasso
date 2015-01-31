@@ -4,17 +4,14 @@
  * Contact: onecoolx@gmail.com
  */
 
-#include <stdio.h>
-#include "common.h"
-#include "device.h"
-#include "graphic_path.h"
-#include "geometry.h"
-#include "convert.h"
-
 #include "picasso_global.h"
 #include "picasso_private.h"
 #include "picasso_painter.h"
 #include "picasso_font.h"
+
+
+#include <stdio.h>
+
 
 namespace picasso {
 
@@ -192,7 +189,8 @@ bool font_adapter::generate_raster(const glyph* g, scalar x, scalar y)
             unsigned int count = 0;
             unsigned int offset = sizeof(unsigned int);
             memcpy(&count, g->data, offset);
-            m_path_adaptor.serialize_from(count, g->data+offset, g->data_size-offset);
+            uint8_t* ptr = (uint8_t*)g->data + offset;
+            m_path_adaptor.serialize_from(count, ptr, g->data_size-offset);
             m_path_adaptor.translate(x, y);
         }
         return true;

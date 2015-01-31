@@ -7,10 +7,9 @@
 #ifndef _GFX_TRANS_AFFINE_H_
 #define _GFX_TRANS_AFFINE_H_
 
-#include "common.h"
-#include "interfaces.h"
-
-#include "graphic_base.h"
+#include "../core/common.h"
+#include "../core/interfaces.h"
+#include "../core/graphic_base.h"
 
 namespace gfx {
 

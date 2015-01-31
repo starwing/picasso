@@ -4,7 +4,7 @@
  * Contact: onecoolx@gmail.com
  */
 
-#include "common.h"
+#include "../core/common.h"
 
 #include "gfx_math.h"
 #include "gfx_gradient_adapter.h"

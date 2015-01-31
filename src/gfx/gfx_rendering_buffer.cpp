@@ -4,7 +4,7 @@
  * Contact: onecoolx@gmail.com
  */
 
-#include "common.h"
+#include "../core/common.h"
 #include "gfx_rendering_buffer.h"
 
 namespace gfx {
@@ -20,7 +20,7 @@ gfx_rendering_buffer::gfx_rendering_buffer()
 {
 }
 
-gfx_rendering_buffer::gfx_rendering_buffer(byte* ptr, unsigned int width, unsigned int height, int stride)
+gfx_rendering_buffer::gfx_rendering_buffer(void* ptr, unsigned int width, unsigned int height, int stride)
     : m_buffer(0)
     , m_width(0)
     , m_height(0)
@@ -32,7 +32,7 @@ gfx_rendering_buffer::gfx_rendering_buffer(byte* ptr, unsigned int width, unsign
     init(ptr, width, height, stride);
 }
 
-void gfx_rendering_buffer::init(byte* ptr, unsigned int width, unsigned int height, int stride)
+void gfx_rendering_buffer::init(void* ptr, unsigned int width, unsigned int height, int stride)
 {
     m_buffer = ptr;
     m_width = width;
@@ -42,11 +42,11 @@ void gfx_rendering_buffer::init(byte* ptr, unsigned int width, unsigned int heig
     if (height > m_rows.size())
         m_rows.resize(height);
 
-    byte* p = m_buffer;
+    uint8_t* p = (uint8_t*)m_buffer;
     if (stride < 0)
-        p = m_buffer - (int)(height-1) * stride;
+        p = p - (int)(height-1) * stride;
 
-    byte** rows = &m_rows[0];
+    uint8_t** rows = &m_rows[0];
     while (height--) {
         *rows++ = p;
         p += stride;

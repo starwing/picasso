@@ -7,12 +7,9 @@
 #ifndef _GFX_PAINTER_H_
 #define _GFX_PAINTER_H_
 
-#include "common.h"
-#include "interfaces.h"
-#include "convert.h"
-
-#include "picasso.h"
-#include "picasso_painter.h"
+#include "../core/common.h"
+#include "../core/interfaces.h"
+#include "../core/convert.h"
 
 #include "pixfmt_wrapper.h"
 #include "gfx_blur.h"
@@ -29,6 +26,17 @@
 #include "gfx_trans_affine.h"
 
 namespace gfx {
+
+enum {
+    WRAP_TYPE_REPEAT,
+    WRAP_TYPE_REFLECT,
+};
+
+enum {
+    TEXT_SMOOTH,
+    TEXT_MONO,
+    TEXT_STROKE,
+};
 
 template <typename Pixfmt>
 class gfx_painter : public abstract_painter
@@ -143,7 +151,7 @@ private:
     //shadow
     bool               m_draw_shadow;
     rect_s             m_shadow_area;
-    byte*              m_shadow_buffer;
+    void*              m_shadow_buffer;
     gfx_rendering_buffer m_shadow_rb;
     pixfmt_rgba32        m_shadow_fmt;
     gfx_renderer<pixfmt_rgba32> m_shadow_base;
@@ -547,7 +555,7 @@ inline bool gfx_painter<Pixfmt>::begin_shadow(const rect_s& rc)
 
     unsigned int w = uround(rc.x2 - rc.x1);
     unsigned int h = uround(rc.y2 - rc.y1);
-    m_shadow_buffer = (byte*)mem_calloc(1, h * w * 4);
+    m_shadow_buffer = (void*)mem_calloc(1, h * w * 4);
 
     if (!m_shadow_buffer) {
         m_draw_shadow = false;

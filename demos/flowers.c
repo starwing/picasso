@@ -89,7 +89,7 @@ void on_init(ps_context* gc, int w, int h)
     ps_path_bezier_to(path, &pt[0], &pt[1], &pt[2]);
     ps_path_sub_close(path);
 
-    tid = set_timer(50);
+    tid = set_timer(16);
 }
 
 void on_draw(ps_context* gc)

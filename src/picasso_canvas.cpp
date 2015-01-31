@@ -4,21 +4,13 @@
  * Contact: onecoolx@gmail.com
  */
 
-#include "common.h"
-#include "device.h"
-#include "graphic_path.h"
-#include "geometry.h"
-#include "convert.h"
-
-#include "picasso.h"
 #include "picasso_global.h"
 #include "picasso_objects.h"
 #include "picasso_painter.h"
-#include "picasso_private.h"
 
 namespace picasso {
 
-int _byte_pre_color(ps_color_format fmt)
+int _void_pre_color(ps_color_format fmt)
 {
     switch (fmt) 
     {
@@ -55,7 +47,7 @@ int _byte_pre_color(ps_color_format fmt)
             return 2;
 #endif
         default:
-            global_status = STATUS_NOT_SUPPORT;
+            picasso_status = STATUS_NOT_SUPPORT;
             return 0;
     }
 }
@@ -97,7 +89,7 @@ static inline painter* get_painter_from_format(ps_color_format fmt)
             return new painter(pix_fmt_rgb555);
 #endif
         default:
-            global_status = STATUS_NOT_SUPPORT;
+            picasso_status = STATUS_NOT_SUPPORT;
             return 0;
     }
 }
@@ -108,15 +100,15 @@ static inline painter* get_painter_from_format(ps_color_format fmt)
 extern "C" {
 #endif
 
-ps_canvas* PICAPI ps_canvas_create(ps_color_format fmt, int w, int h)
+PIC_API ps_canvas* ps_canvas_create(ps_color_format fmt, int w, int h)
 {
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
+        picasso_status = STATUS_DEVICE_ERROR;
         return 0;
     }
 
     if (w <= 0 || h <= 0) {
-        global_status = STATUS_INVALID_ARGUMENT;
+        picasso_status = STATUS_INVALID_ARGUMENT;
         return 0;
     }
 
@@ -133,42 +125,42 @@ ps_canvas* PICAPI ps_canvas_create(ps_color_format fmt, int w, int h)
         p->host = 0;
         p->mask = 0;
         new ((void*)&(p->buffer)) picasso::rendering_buffer; 
-        int pitch = picasso::_byte_pre_color(fmt) * w;
-        byte* buf = 0;
-        if ((buf = (byte*)BufferAlloc(h * pitch))) {
+        int pitch = picasso::_void_pre_color(fmt) * w;
+        void* buf = 0;
+        if ((buf = (void*)BufferAlloc(h * pitch))) {
             p->flage = buffer_alloc_surface;
             p->buffer.attach(buf, w, h, pitch);
             p->p->attach(p->buffer);
-            global_status = STATUS_SUCCEED;
+            picasso_status = STATUS_SUCCEED;
             return p;
-        } else if ((buf = (byte*)mem_malloc(h * pitch))) {
+        } else if ((buf = (void*)mem_malloc(h * pitch))) {
             p->flage = buffer_alloc_malloc;
             p->buffer.attach(buf, w, h, pitch);
             p->p->attach(p->buffer);
-            global_status = STATUS_SUCCEED;
+            picasso_status = STATUS_SUCCEED;
             return p;
         } else {
             delete pa;
             mem_free(p);
-            global_status = STATUS_OUT_OF_MEMORY;
+            picasso_status = STATUS_OUT_OF_MEMORY;
             return 0;
         }
     } else {
         delete pa; //mem_free painter on error
-        global_status = STATUS_OUT_OF_MEMORY;
+        picasso_status = STATUS_OUT_OF_MEMORY;
         return 0;
     }
 }
 
-ps_canvas* PICAPI ps_canvas_create_compatible(const ps_canvas* c, int w, int h)
+PIC_API ps_canvas* ps_canvas_create_compatible(const ps_canvas* c, int w, int h)
 {
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
+        picasso_status = STATUS_DEVICE_ERROR;
         return 0;
     }
 
     if (!c) {
-        global_status = STATUS_INVALID_ARGUMENT;
+        picasso_status = STATUS_INVALID_ARGUMENT;
         return 0;
     }
 
@@ -191,49 +183,49 @@ ps_canvas* PICAPI ps_canvas_create_compatible(const ps_canvas* c, int w, int h)
         p->host = 0;
         p->mask = 0;
         new ((void*)&(p->buffer)) picasso::rendering_buffer; 
-        int pitch = picasso::_byte_pre_color(c->fmt) * w;
-        byte* buf = 0;
-        if ((buf = (byte*)BufferAlloc(h * pitch))) {
+        int pitch = picasso::_void_pre_color(c->fmt) * w;
+        void* buf = 0;
+        if ((buf = (void*)BufferAlloc(h * pitch))) {
             p->flage = buffer_alloc_surface;
             p->buffer.attach(buf, w, h, pitch);
             p->p->attach(p->buffer);
-            global_status = STATUS_SUCCEED;
+            picasso_status = STATUS_SUCCEED;
             return p;
-        } else if ((buf = (byte*)mem_malloc(h * pitch))) {
+        } else if ((buf = (void*)mem_malloc(h * pitch))) {
             p->flage = buffer_alloc_malloc;
             p->buffer.attach(buf, w, h, pitch);
             p->p->attach(p->buffer);
-            global_status = STATUS_SUCCEED;
+            picasso_status = STATUS_SUCCEED;
             return p;
         } else {
             delete pa;
             mem_free(p);
-            global_status = STATUS_OUT_OF_MEMORY;
+            picasso_status = STATUS_OUT_OF_MEMORY;
             return 0;
         }
     } else {
         delete pa; //mem_free painter on error
-        global_status = STATUS_OUT_OF_MEMORY;
+        picasso_status = STATUS_OUT_OF_MEMORY;
         return 0;
     }
 }
 
-ps_canvas* PICAPI ps_canvas_create_from_canvas(ps_canvas* c, const ps_rect* r)
+PIC_API ps_canvas* ps_canvas_create_from_canvas(ps_canvas* c, const ps_rect* r)
 {
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
+        picasso_status = STATUS_DEVICE_ERROR;
         return 0;
     }
 
     if (!c) {
-        global_status = STATUS_INVALID_ARGUMENT;
+        picasso_status = STATUS_INVALID_ARGUMENT;
         return 0;
     }
 
     ps_rect rc = {0, 0, (float)c->buffer.width(), (float)c->buffer.height()}; 
     if (!r) {
         //Note: if rect is NULL, It equal reference.
-        global_status = STATUS_SUCCEED;
+        picasso_status = STATUS_SUCCEED;
         return ps_canvas_ref(c);
     } else {
         if (r->x > 0)
@@ -259,29 +251,31 @@ ps_canvas* PICAPI ps_canvas_create_from_canvas(ps_canvas* c, const ps_rect* r)
         p->flage = buffer_alloc_image;
         p->host = (void*)ps_canvas_ref(c);
         p->mask = 0;
-        int bpp = picasso::_byte_pre_color(c->fmt);
+        int bpp = picasso::_void_pre_color(c->fmt);
         new ((void*)&(p->buffer)) picasso::rendering_buffer; 
-        p->buffer.attach(c->buffer.buffer()+_iround(rc.y*c->buffer.stride()+rc.x*bpp), 
-                                       _iround(rc.w), _iround(rc.h), c->buffer.stride());
+        uint8_t *ptr = (uint8_t*)c->buffer.buffer() +
+            _iround(rc.y*c->buffer.stride()+rc.x*bpp);
+        p->buffer.attach((void*)ptr, 
+                _iround(rc.w), _iround(rc.h), c->buffer.stride());
         p->p->attach(p->buffer);
-        global_status = STATUS_SUCCEED;
+        picasso_status = STATUS_SUCCEED;
         return p;
     } else {
         delete pa; //mem_free painter on error
-        global_status = STATUS_OUT_OF_MEMORY;
+        picasso_status = STATUS_OUT_OF_MEMORY;
         return 0;
     }
 }
 
-ps_canvas* PICAPI ps_canvas_create_from_image(ps_image* i, const ps_rect* r)
+PIC_API ps_canvas* ps_canvas_create_from_image(ps_image* i, const ps_rect* r)
 {
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
+        picasso_status = STATUS_DEVICE_ERROR;
         return 0;
     }
 
     if (!i) {
-        global_status = STATUS_INVALID_ARGUMENT;
+        picasso_status = STATUS_INVALID_ARGUMENT;
         return 0;
     }
 
@@ -310,29 +304,31 @@ ps_canvas* PICAPI ps_canvas_create_from_image(ps_image* i, const ps_rect* r)
         p->flage = buffer_alloc_image;
         p->host = (void*)ps_image_ref(i);
         p->mask = 0;
-        int bpp = picasso::_byte_pre_color(i->fmt);
+        int bpp = picasso::_void_pre_color(i->fmt);
         new ((void*)&(p->buffer)) picasso::rendering_buffer; 
-        p->buffer.attach(i->buffer.buffer()+_iround(rc.y*i->buffer.stride()+rc.x*bpp), 
-                                       _iround(rc.w), _iround(rc.h), i->buffer.stride());
+        uint8_t* ptr = (uint8_t*)i->buffer.buffer() + 
+            _iround(rc.y*i->buffer.stride()+rc.x*bpp);
+        p->buffer.attach((void*)ptr,
+                _iround(rc.w), _iround(rc.h), i->buffer.stride());
         p->p->attach(p->buffer);
-        global_status = STATUS_SUCCEED;
+        picasso_status = STATUS_SUCCEED;
         return p;
     } else {
         delete pa; //mem_free painter on error
-        global_status = STATUS_OUT_OF_MEMORY;
+        picasso_status = STATUS_OUT_OF_MEMORY;
         return 0;
     }
 }
 
-ps_canvas* PICAPI ps_canvas_create_with_data(ps_byte * addr, ps_color_format fmt, int w, int h, int pitch)
+PIC_API ps_canvas* ps_canvas_create_with_data(void * addr, ps_color_format fmt, int w, int h, int pitch)
 {
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
+        picasso_status = STATUS_DEVICE_ERROR;
         return 0;
     }
 
     if (!addr || w <= 0 || h <= 0 || pitch <= 0) {
-        global_status = STATUS_INVALID_ARGUMENT;
+        picasso_status = STATUS_INVALID_ARGUMENT;
         return 0;
     }
 
@@ -352,70 +348,70 @@ ps_canvas* PICAPI ps_canvas_create_with_data(ps_byte * addr, ps_color_format fmt
         new ((void*)&(p->buffer)) picasso::rendering_buffer; 
         p->buffer.attach(addr, w, h, pitch);
         p->p->attach(p->buffer);
-        global_status = STATUS_SUCCEED;
+        picasso_status = STATUS_SUCCEED;
         return p;
     } else {
         delete pa; //mem_free painter on error
-        global_status = STATUS_OUT_OF_MEMORY;
+        picasso_status = STATUS_OUT_OF_MEMORY;
         return 0;
     }
 }
 
-ps_canvas* PICAPI ps_canvas_replace_data(ps_canvas* canvas, ps_byte* addr,
+PIC_API ps_canvas* ps_canvas_replace_data(ps_canvas* canvas, void* addr,
                                             ps_color_format fmt, int w, int h, int pitch)
 {
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
+        picasso_status = STATUS_DEVICE_ERROR;
         return 0;
     }
 
     if (!canvas || !addr || w <= 0 || h <= 0 || pitch <= 0) {
-        global_status = STATUS_INVALID_ARGUMENT;
+        picasso_status = STATUS_INVALID_ARGUMENT;
         return 0;
     }
 
     if (canvas->flage != buffer_alloc_none) {
-        global_status = STATUS_INVALID_ARGUMENT;
+        picasso_status = STATUS_INVALID_ARGUMENT;
         return 0;
     }
 
     if (canvas->fmt != fmt) {
-        global_status = STATUS_MISMATCHING_FORMAT;
+        picasso_status = STATUS_MISMATCHING_FORMAT;
         return 0;
     }
 
     // replace target buffer address.
     canvas->buffer.replace(addr, w, h, pitch);
-    global_status = STATUS_SUCCEED;
+    picasso_status = STATUS_SUCCEED;
     return canvas;
 }
 
-ps_canvas* PICAPI ps_canvas_ref(ps_canvas* canvas)
+PIC_API ps_canvas* ps_canvas_ref(ps_canvas* canvas)
 {
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
+        picasso_status = STATUS_DEVICE_ERROR;
         return 0;
     }
 
     if (!canvas) {
-        global_status = STATUS_INVALID_ARGUMENT;
+        picasso_status = STATUS_INVALID_ARGUMENT;
         return 0;
     }
 
     canvas->refcount++;
-    global_status = STATUS_SUCCEED;
+    picasso_status = STATUS_SUCCEED;
     return canvas;
 }
 
-void PICAPI ps_canvas_unref(ps_canvas* canvas)
+PIC_API void ps_canvas_unref(ps_canvas* canvas)
 {
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
+        picasso_status = STATUS_DEVICE_ERROR;
         return;
     }
 
     if (!canvas) {
-        global_status = STATUS_INVALID_ARGUMENT;
+        picasso_status = STATUS_INVALID_ARGUMENT;
         return;
     }
 
@@ -437,52 +433,52 @@ void PICAPI ps_canvas_unref(ps_canvas* canvas)
         (&canvas->buffer)->picasso::rendering_buffer::~rendering_buffer();
         mem_free(canvas);
     }
-    global_status = STATUS_SUCCEED;
+    picasso_status = STATUS_SUCCEED;
 }
 
-ps_size PICAPI ps_canvas_get_size(const ps_canvas* canvas)
+PIC_API ps_size ps_canvas_get_size(const ps_canvas* canvas)
 {
     ps_size size = {0 , 0};
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
+        picasso_status = STATUS_DEVICE_ERROR;
         return size;
     }
 
     if (!canvas) {
-        global_status = STATUS_INVALID_ARGUMENT;
+        picasso_status = STATUS_INVALID_ARGUMENT;
         return size;
     }
 
     size.w = (float)canvas->buffer.width();
     size.h = (float)canvas->buffer.height();
-    global_status = STATUS_SUCCEED;
+    picasso_status = STATUS_SUCCEED;
     return size;
 }
 
-ps_color_format PICAPI ps_canvas_get_format(const ps_canvas* canvas)
+PIC_API ps_color_format ps_canvas_get_format(const ps_canvas* canvas)
 {
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
+        picasso_status = STATUS_DEVICE_ERROR;
         return COLOR_FORMAT_UNKNOWN;
     }
 
     if (!canvas) {
-        global_status = STATUS_INVALID_ARGUMENT;
+        picasso_status = STATUS_INVALID_ARGUMENT;
         return COLOR_FORMAT_UNKNOWN;
     }
-    global_status = STATUS_SUCCEED;
+    picasso_status = STATUS_SUCCEED;
     return canvas->fmt;
 }
 
-void PICAPI ps_canvas_set_mask(ps_canvas* c, const ps_mask* m)
+PIC_API void ps_canvas_set_mask(ps_canvas* c, const ps_mask* m)
 {
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
+        picasso_status = STATUS_DEVICE_ERROR;
         return;
     }
 
     if (!c || !m) {
-        global_status = STATUS_INVALID_ARGUMENT;
+        picasso_status = STATUS_INVALID_ARGUMENT;
         return;
     }
 
@@ -491,18 +487,18 @@ void PICAPI ps_canvas_set_mask(ps_canvas* c, const ps_mask* m)
 
     c->mask = ps_mask_ref(const_cast<ps_mask*>(m));
     c->p->render_mask(c->mask->mask, true);
-    global_status = STATUS_SUCCEED;
+    picasso_status = STATUS_SUCCEED;
 }
 
-void PICAPI ps_canvas_reset_mask(ps_canvas* c)
+PIC_API void ps_canvas_reset_mask(ps_canvas* c)
 {
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
+        picasso_status = STATUS_DEVICE_ERROR;
         return;
     }
 
     if (!c) {
-        global_status = STATUS_INVALID_ARGUMENT;
+        picasso_status = STATUS_INVALID_ARGUMENT;
         return;
     }
 
@@ -511,18 +507,18 @@ void PICAPI ps_canvas_reset_mask(ps_canvas* c)
         ps_mask_unref(c->mask);
         c->mask = 0;
     }
-    global_status = STATUS_SUCCEED;
+    picasso_status = STATUS_SUCCEED;
 }
 
-void PICAPI ps_canvas_bitblt(ps_canvas* src, const ps_rect* r, ps_canvas* dst, const ps_point* l)
+PIC_API void ps_canvas_bitblt(ps_canvas* src, const ps_rect* r, ps_canvas* dst, const ps_point* l)
 {
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
+        picasso_status = STATUS_DEVICE_ERROR;
         return;
     }
 
     if (!src || !dst) {
-        global_status = STATUS_INVALID_ARGUMENT;
+        picasso_status = STATUS_INVALID_ARGUMENT;
         return;
     }
 
@@ -540,7 +536,7 @@ void PICAPI ps_canvas_bitblt(ps_canvas* src, const ps_rect* r, ps_canvas* dst, c
         src->p->render_copy(src->buffer, 0, dst->p, x, y);
     }
 
-    global_status = STATUS_SUCCEED;
+    picasso_status = STATUS_SUCCEED;
 }
 
 #ifdef __cplusplus

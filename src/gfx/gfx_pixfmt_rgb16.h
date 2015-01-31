@@ -7,7 +7,7 @@
 #ifndef _GFX_PIXFMT_RGB16_H_
 #define _GFX_PIXFMT_RGB16_H_
 
-#include "common.h"
+#include "../core/common.h"
 #include "gfx_rendering_buffer.h"
 
 namespace gfx {
@@ -1371,14 +1371,14 @@ public:
     unsigned int height(void) const { return m_buffer->internal_height(); }
     int stride(void) const { return m_buffer->internal_stride(); }
 
-    byte* row_ptr(int y) { return m_buffer->row_ptr(y); }
-    const byte* row_ptr(int y) const { return m_buffer->row_ptr(y); }
+    uint8_t* row_ptr(int y) { return m_buffer->row_ptr(y); }
+    const uint8_t* row_ptr(int y) const { return m_buffer->row_ptr(y); }
     row_data row(int y) const { return m_buffer->row(y); }
 
     void alpha(scalar a) { m_alpha_factor = uround(a * base_mask); }
     scalar alpha(void) const { return INT_TO_SCALAR(m_alpha_factor) / FLT_TO_SCALAR(255.0f); }
 
-    byte* pix_ptr(int x, int y) const
+    uint8_t* pix_ptr(int x, int y) const
     {
         return m_buffer->row_ptr(y) + x * pix_width;
     }
@@ -1507,7 +1507,7 @@ public:
         } while(--len);
     }
     
-    static void make_pix(byte* p, const color_type& c)
+    static void make_pix(uint8_t* p, const color_type& c)
     {
         *(pixel_type*)p = blender_type::make_pix(c.r, c.g, c.b);
     }
@@ -1515,7 +1515,7 @@ public:
     template <typename RenBuffer2>
     void copy_point_from(const RenBuffer2& from, int xdst, int ydst, int xsrc, int ysrc)
     {
-        const byte* p = from.row_ptr(ysrc);
+        const uint8_t* p = from.row_ptr(ysrc);
         if (p) {
             mem_deep_copy(m_buffer->row_ptr(xdst, ydst, 1) + xdst * pix_width, 
                           p + xsrc * pix_width, pix_width);
@@ -1525,7 +1525,7 @@ public:
     template <typename RenBuffer2>
     void copy_from(const RenBuffer2& from, int xdst, int ydst, int xsrc, int ysrc, unsigned int len)
     {
-        const byte* p = from.row_ptr(ysrc);
+        const uint8_t* p = from.row_ptr(ysrc);
         if (p) {
             mem_deep_copy(m_buffer->row_ptr(xdst, ydst, len) + xdst * pix_width,
                           p + xsrc * pix_width, len * pix_width);

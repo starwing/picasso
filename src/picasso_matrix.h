@@ -7,13 +7,16 @@
 #ifndef _PICASSO_MATRIX_H_
 #define _PICASSO_MATRIX_H_
 
-#include "common.h"
-#include "device.h"
-#include "interfaces.h"
+
+#include "core/common.h"
+#include "core/vertex.h"
+
 
 namespace picasso {
 
-class trans_affine
+class abstract_trans_affine;
+
+class trans_affine 
 {
 public:
     trans_affine();
@@ -69,20 +72,9 @@ private:
     abstract_trans_affine* m_impl;
 };
 
-inline bool operator == (const trans_affine& a, const trans_affine& b)
-{
-    return a.impl()->is_equal(b.impl());
-}
-
-inline bool operator != (const trans_affine& a, const trans_affine& b)
-{
-    return !a.impl()->is_equal(b.impl());
-}
-
-inline trans_affine operator * (const trans_affine& a, const trans_affine& b)
-{
-    return trans_affine(a).multiply(b);
-}
+bool operator == (const trans_affine& a, const trans_affine& b);
+bool operator != (const trans_affine& a, const trans_affine& b);
+trans_affine operator * (const trans_affine& a, const trans_affine& b);
 
 }
 #endif/*_PICASSO_MATRIX_H_*/

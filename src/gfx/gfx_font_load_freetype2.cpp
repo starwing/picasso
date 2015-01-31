@@ -4,10 +4,11 @@
  * Contact: onecoolx@gmail.com
  */
 
-#include "common.h"
-#include "picasso_global.h"
+#if ENABLE_FREETYPE2
+#include "../core/common.h"
+#include "../core/data_vector.h"
+#include "../picasso_global.h"
 
-#if ENABLE(FREE_TYPE2)
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include <stdio.h>
@@ -79,7 +80,7 @@ struct font_item {
  * Note : _load_fonts function init the global font map at initialize time.
  * it only be call once and not need thread lock.
  */
-typedef picasso::pod_bvector<font_item*> font_map;
+typedef typename picasso::pod_bvector<font_item*> font_map;
 
 static font_map g_font_map;
 
@@ -91,7 +92,7 @@ static font_item* get_font_item(const char* name, const char* path)
         strncpy(f->font_path, path, MAX_FONT_PATH_LENGTH-1);
         return f;
     } else { 
-        global_status = STATUS_OUT_OF_MEMORY;
+        picasso_status = STATUS_OUT_OF_MEMORY;
         return 0;
     }
 }
@@ -211,4 +212,4 @@ void platform_font_shutdown(void)
     gfx::_free_fonts();
 }
 
-#endif /* FREE_TYPE2 */
+#endif // ENABLE_FREETYPE2

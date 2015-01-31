@@ -7,7 +7,7 @@
 #ifndef _GFX_IMAGE_ACCESSORS_H_
 #define _GFX_IMAGE_ACCESSORS_H_
 
-#include "common.h"
+#include "../core/common.h"
 
 namespace gfx {
 
@@ -32,7 +32,7 @@ public:
     }
 
 public:
-    const byte* span(int x, int y, unsigned int len)
+    const uint8_t* span(int x, int y, unsigned int len)
     {
         m_x = m_tx = x;
         m_y = y;
@@ -47,7 +47,7 @@ public:
         return pixel();
     }
 
-    const byte* next_x(void)
+    const uint8_t* next_x(void)
     {
         if (m_pix_ptr)
             return m_pix_ptr += pix_width;
@@ -56,7 +56,7 @@ public:
         return pixel();
     }
 
-    const byte* next_y(void)
+    const uint8_t* next_y(void)
     {
         ++m_y;
         m_x = m_tx;
@@ -73,7 +73,7 @@ private:
     image_accessor(const image_accessor&);
     image_accessor& operator=(const image_accessor&);
 
-    const byte* pixel(void) const
+    const uint8_t* pixel(void) const
     {
         register int x = m_x;
         register int y = m_y;
@@ -96,7 +96,7 @@ private:
     int m_y;
     int m_tx;
     const PixFmt* m_pixf;
-    const byte* m_pix_ptr;
+    const uint8_t* m_pix_ptr;
 };
 
 
@@ -123,20 +123,20 @@ public:
     }
 
 public:
-    const byte* span(int x, int y, unsigned int)
+    const uint8_t* span(int x, int y, unsigned int)
     {
         m_x = x;
         m_row_ptr = m_pixf->row_ptr(m_wrap_y(y));
         return m_row_ptr + m_wrap_x(x) * pix_width;
     }
 
-    const byte* next_x(void)
+    const uint8_t* next_x(void)
     {
         int x = ++m_wrap_x;
         return m_row_ptr + x * pix_width;
     }
 
-    const byte* next_y(void)
+    const uint8_t* next_y(void)
     {
         m_row_ptr = m_pixf->row_ptr(++m_wrap_y);
         return m_row_ptr + m_wrap_x(m_x) * pix_width;
@@ -147,7 +147,7 @@ private:
 
 private:
     const PixFmt* m_pixf;
-    const byte* m_row_ptr;
+    const uint8_t* m_row_ptr;
     int m_x;
     WrapX m_wrap_x;
     WrapY m_wrap_y;

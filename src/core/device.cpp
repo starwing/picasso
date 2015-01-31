@@ -8,7 +8,7 @@
 #include "math_type.h"
 
 #include "device.h"
-#include "gfx_device.h"
+#include "../gfx/gfx_device.h"
 
 namespace picasso {
 

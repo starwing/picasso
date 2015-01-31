@@ -4,7 +4,7 @@
  * Contact: onecoolx@gmail.com
  */
 
-#include "common.h"
+#include "../core/common.h"
 
 namespace gfx {
 

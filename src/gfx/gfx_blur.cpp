@@ -4,7 +4,6 @@
  * Contact: onecoolx@gmail.com
  */
 
-#include "common.h"
 #include "gfx_blur.h"
 
 namespace gfx {

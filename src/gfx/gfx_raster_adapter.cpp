@@ -4,14 +4,12 @@
  * Contact: onecoolx@gmail.com
  */
 
-#include "common.h"
-#include "convert.h"
+#include "../core/common.h"
+#include "../core/convert.h"
 
 #include "gfx_gamma_function.h"
 #include "gfx_raster_adapter.h"
 #include "gfx_trans_affine.h"
-
-#include "picasso_raster_adapter.h"
 
 namespace gfx {
 

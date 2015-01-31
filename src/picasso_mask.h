@@ -7,24 +7,19 @@
 #ifndef _PICASSO_MASK_H_
 #define _PICASSO_MASK_H_
 
-#include "common.h"
-#include "device.h"
-#include "interfaces.h"
-
-enum {
-    MASK_ALPHA,
-    MASK_COLORS,
-};
+#include "core/common.h"
+#include "core/interfaces.h"
+#include "gfx/gfx_mask_layer.h"
 
 namespace picasso {
 
 class mask_layer
 {
 public:
-    mask_layer(byte* buf, unsigned int width, unsigned int height, int stride, int type = MASK_ALPHA);
+    mask_layer(void* buf, unsigned int width, unsigned int height, int stride, int type = gfx::MASK_ALPHA);
     ~mask_layer();
 public:
-    void attach(byte* buf, unsigned int width, unsigned int height, int stride);
+    void attach(void* buf, unsigned int width, unsigned int height, int stride);
 
     void set_mask_type(int type);
     void add_filter_color(const rgba& c);

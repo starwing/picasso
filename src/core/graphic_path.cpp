@@ -5,13 +5,12 @@
  */
 
 #include "common.h"
+#include "interfaces.h"
 #include "math_type.h"
 #include "data_vector.h"
 #include "geometry.h"
 #include "graphic_base.h"
 #include "graphic_path.h"
-
-#include "picasso_matrix.h"
 
 namespace picasso {
 
@@ -117,7 +116,7 @@ public:
         return m_vertices.size();
     }
 
-    unsigned int total_byte_size(void) const
+    unsigned int total_void_size(void) const
     {
         return m_vertices.size() * sizeof(vertex_s) + m_cmds.size() * sizeof(unsigned int);
     }
@@ -407,9 +406,9 @@ unsigned int graphic_path::total_vertices(void) const
     return m_impl->total_vertices();
 }
 
-unsigned int graphic_path::total_byte_size(void) const
+unsigned int graphic_path::total_void_size(void) const
 {
-    return m_impl->total_byte_size();
+    return m_impl->total_void_size();
 }
 
 void graphic_path::rel_to_abs(scalar* x, scalar* y) const
@@ -633,7 +632,7 @@ void graphic_path::translate_all_paths(scalar dx, scalar dy)
     }
 }
 
-void graphic_path::transform(const trans_affine& trans, unsigned int id)
+void graphic_path::transform(const abstract_trans_affine* trans, unsigned int id)
 {
     unsigned int num_ver = m_impl->total_vertices();
     for (unsigned int path_id = id; path_id < num_ver; path_id++) {
@@ -643,20 +642,20 @@ void graphic_path::transform(const trans_affine& trans, unsigned int id)
             break;
 
         if (is_vertex(cmd)) {
-            trans.transform(&x, &y);
+            trans->transform(&x, &y);
             m_impl->modify_vertex(path_id, x, y);
         }
     }
 }
 
-void graphic_path::transform_all_paths(const trans_affine& trans)
+void graphic_path::transform_all_paths(const abstract_trans_affine* trans)
 {
     unsigned int idx;
     unsigned int num_ver = m_impl->total_vertices();
     for (idx = 0; idx < num_ver; idx++) {
         scalar x, y;
         if (is_vertex(m_impl->vertex(idx, &x, &y))) {
-            trans.transform(&x, &y);
+            trans->transform(&x, &y);
             m_impl->modify_vertex(idx, x, y);
         }
     }
@@ -706,23 +705,25 @@ void graphic_path::concat_path(vertex_source& vs, unsigned int id)
     }
 }
 
-void graphic_path::serialize_to(byte* buffer)
+void graphic_path::serialize_to(void* buffer)
 {
+    uint8_t* p = (uint8_t*)buffer;
     unsigned int num = m_impl->total_vertices();
-    memcpy(buffer, m_impl->m_vertices.data(), num * sizeof(vertex_s));
-    buffer += num * sizeof(vertex_s);
-    memcpy(buffer, m_impl->m_cmds.data(), num * sizeof(unsigned int));
+    memcpy(p, m_impl->m_vertices.data(), num * sizeof(vertex_s));
+    p += num * sizeof(vertex_s);
+    memcpy(p, m_impl->m_cmds.data(), num * sizeof(unsigned int));
 }
 
-void graphic_path::serialize_from(unsigned int num, byte* buffer, unsigned int buf_len)
+void graphic_path::serialize_from(unsigned int num, void* buffer, unsigned int buf_len)
 {
+    uint8_t* p = (uint8_t*)buffer;
     //FIXME: paramer check and buf_len!
     remove_all();
     m_impl->m_vertices.resize(num);
-    m_impl->m_vertices.set_data(num, (vertex_s*)buffer);
-    buffer += num * sizeof(vertex_s);
+    m_impl->m_vertices.set_data(num, (vertex_s*)p);
+    p += num * sizeof(vertex_s);
     m_impl->m_cmds.resize(num);
-    m_impl->m_cmds.set_data(num, (unsigned int*)buffer);
+    m_impl->m_cmds.set_data(num, (unsigned int*)p);
 }
 
 }

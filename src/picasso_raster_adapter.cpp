@@ -4,11 +4,7 @@
  * Contact: onecoolx@gmail.com
  */
 
-#include "common.h"
-#include "device.h"
-#include "interfaces.h"
-
-#include "picasso.h"
+#include "gfx/gfx_raster_adapter.h"
 #include "picasso_global.h"
 #include "picasso_raster_adapter.h"
 #include "picasso_objects.h"
@@ -94,7 +90,7 @@ bool raster_adapter::fill_contents_point(const vertex_source& vs, scalar x, scal
     trans_affine mtx;
     if (rs) {
         rs->set_raster_method(raster_fill);
-        rs->set_fill_attr(FIA_FILL_RULE, rule);
+        rs->set_fill_attr(gfx::FIA_FILL_RULE, rule);
         rs->set_transform(mtx.impl());
         rs->add_shape(vs, 0);
         rs->commit();

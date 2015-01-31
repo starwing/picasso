@@ -4,12 +4,6 @@
  * Contact: onecoolx@gmail.com
  */
 
-#include "common.h"
-#include "device.h"
-#include "interfaces.h"
-#include "graphic_path.h"
-
-#include "picasso.h"
 #include "picasso_global.h"
 #include "picasso_rendering_buffer.h"
 #include "picasso_objects.h"
@@ -21,7 +15,7 @@ rendering_buffer::rendering_buffer()
 {
 }
 
-rendering_buffer::rendering_buffer(byte* buf, unsigned int width, unsigned int height, int stride)
+rendering_buffer::rendering_buffer(void* buf, unsigned int width, unsigned int height, int stride)
     : m_impl(0)
 {
     attach(buf, width, height, stride);
@@ -33,7 +27,7 @@ rendering_buffer::~rendering_buffer()
         get_system_device()->destroy_rendering_buffer(m_impl);
 }
 
-void rendering_buffer::attach(byte* buf, unsigned int width, unsigned int height, int stride)
+void rendering_buffer::attach(void* buf, unsigned int width, unsigned int height, int stride)
 {
     if (m_impl)
         get_system_device()->destroy_rendering_buffer(m_impl);
@@ -41,7 +35,7 @@ void rendering_buffer::attach(byte* buf, unsigned int width, unsigned int height
     m_impl = get_system_device()->create_rendering_buffer(buf, width, height, stride);
 }
 
-void rendering_buffer::replace(byte* buf, unsigned int width, unsigned int height, int stride)
+void rendering_buffer::replace(void* buf, unsigned int width, unsigned int height, int stride)
 {
     m_impl->init(buf, width, height, stride);
 }
@@ -75,7 +69,7 @@ int rendering_buffer::stride(void) const
     return 0;
 }
 
-byte * rendering_buffer::buffer(void) const
+void * rendering_buffer::buffer(void) const
 {
     if (m_impl)
         return m_impl->buffer(); 

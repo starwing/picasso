@@ -7,8 +7,8 @@
 #ifndef _PICASSO_PRIVATE_H_
 #define _PICASSO_PRIVATE_H_
 
-#include "common.h"
-#include "convert.h"
+#include "core/convert.h"
+#include "picasso.h"
 
 namespace picasso {
 
@@ -21,7 +21,7 @@ ps_font* _default_font(void);
 void _path_operation(conv_clipper::clip_op op, const graphic_path& a, const graphic_path& b, graphic_path& r);
 
 // Format
-int _byte_pre_color(ps_color_format fmt);
+int _void_pre_color(ps_color_format fmt);
 }
 
 // Font Load

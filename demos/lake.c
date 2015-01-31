@@ -73,7 +73,7 @@ void on_init(ps_context* gc, int w, int h)
     img_width = pic->width;
     img_height = pic->height;
     ps_set_filter(gc, FILTER_NEAREST);
-    tid = set_timer(100);
+    tid = set_timer(16);
 }
 
 void on_draw(ps_context* gc)

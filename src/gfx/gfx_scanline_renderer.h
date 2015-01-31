@@ -7,7 +7,7 @@
 #ifndef _GFX_SCANLINE_RENDERER_H_
 #define _GFX_SCANLINE_RENDERER_H_
 
-#include "common.h"
+#include "../core/common.h"
 
 namespace gfx {
 

@@ -7,9 +7,8 @@
 #ifndef _GFX_RASTERIZER_CLIP_H_
 #define _GFX_RASTERIZER_CLIP_H_
 
-#include "common.h"
-
-#include "graphic_base.h"
+#include "../core/common.h"
+#include "../core/graphic_base.h"
 
 namespace gfx {
 

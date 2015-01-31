@@ -7,14 +7,17 @@
 #ifndef _GFX_MASK_LAYER_H_
 #define _GFX_MASK_LAYER_H_
 
-#include "common.h"
-#include "interfaces.h"
-
-#include "picasso_mask.h"
+#include "../core/common.h"
+#include "../core/interfaces.h"
 
 #include "gfx_rendering_buffer.h"
 
 namespace gfx {
+
+enum {
+    MASK_ALPHA,
+    MASK_COLORS,
+};
 
 // alpha mask
 class gfx_alpha_mask_u8
@@ -410,7 +413,7 @@ private:
 class gfx_mask_layer : public abstract_mask_layer
 {
 public:
-    gfx_mask_layer(byte* buf, unsigned int width, unsigned int height, int stride) 
+    gfx_mask_layer(void* buf, unsigned int width, unsigned int height, int stride) 
         : m_type(MASK_ALPHA)
     {
         attach(buf, width, height, stride);
@@ -421,7 +424,7 @@ public:
         m_colors.clear();
     }
 
-    virtual void attach(byte* buf, unsigned int width, unsigned int height, int stride)
+    virtual void attach(void* buf, unsigned int width, unsigned int height, int stride)
     {
         m_buffer.init(buf, width, height, stride);
     }

@@ -4,16 +4,12 @@
  * Contact: onecoolx@gmail.com
  */
 
-#include "common.h"
-#include "device.h"
-#include "interfaces.h"
-
 #include "picasso_global.h"
 #include "picasso_mask.h"
 
 namespace picasso {
 
-mask_layer::mask_layer(byte* buf, unsigned int width, unsigned int height, int stride, int type)
+mask_layer::mask_layer(void* buf, unsigned int width, unsigned int height, int stride, int type)
     : m_impl(0)
 {
     attach(buf, width, height, stride);
@@ -26,7 +22,7 @@ mask_layer::~mask_layer()
         get_system_device()->destroy_mask_layer(m_impl);
 }
 
-void mask_layer::attach(byte* buf, unsigned int width, unsigned int height, int stride)
+void mask_layer::attach(void* buf, unsigned int width, unsigned int height, int stride)
 {
     if (m_impl)
         get_system_device()->destroy_mask_layer(m_impl);

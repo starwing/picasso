@@ -7,7 +7,7 @@
 #ifndef _GFX_LINE_GENERATOR_H_
 #define _GFX_LINE_GENERATOR_H_
 
-#include "common.h"
+#include "../core/common.h"
 
 namespace gfx {
 

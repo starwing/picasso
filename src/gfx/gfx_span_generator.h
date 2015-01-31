@@ -7,8 +7,8 @@
 #ifndef _GFX_SPAN_GENERATOR_H_
 #define _GFX_SPAN_GENERATOR_H_
 
-#include "common.h"
-#include "data_vector.h"
+#include "../core/common.h"
+#include "../core/data_vector.h"
 
 #include "gfx_line_generator.h"
 #include "gfx_trans_affine.h"

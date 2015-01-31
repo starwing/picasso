@@ -4,12 +4,16 @@
  * Contact: onecoolx@gmail.com
  */
 
-#include "common.h"
-
 #include "gfx_image_filters.h"
-#include "picasso.h"
 
 namespace gfx {
+
+enum {
+    FILTER_NEAREST,
+    FILTER_BILINEAR,
+    FILTER_GAUSSIAN,
+    FILTER_UNKNOWN,
+};
 
 // image_filter
 template<typename FilterType>

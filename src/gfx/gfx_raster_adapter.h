@@ -7,13 +7,25 @@
 #ifndef _GFX_RASTER_ADAPTER_H_
 #define _GFX_RASTER_ADAPTER_H_
 
-#include "common.h"
-#include "interfaces.h"
+#include "../core/common.h"
+#include "../core/interfaces.h"
 
 #include "gfx_rasterizer_scanline.h"
 #include "gfx_trans_affine.h"
 
 namespace gfx {
+
+enum {
+    STA_WIDTH,
+    STA_LINE_CAP,
+    STA_LINE_JOIN,
+    STA_INNER_JOIN,
+    STA_MITER_LIMIT,
+};
+
+enum {
+    FIA_FILL_RULE,
+};
 
 class gfx_raster_adapter_impl;
 

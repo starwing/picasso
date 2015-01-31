@@ -7,10 +7,14 @@
 #ifndef _GFX_SCANLINE_STORAGE_H_
 #define _GFX_SCANLINE_STORAGE_H_
 
-#include "common.h"
-#include "data_vector.h"
+#include "../core/common.h"
+#include "../core/math_type.h"
+#include "../core/data_vector.h"
+#include "../core/graphic_base.h"
 
 namespace gfx {
+
+using ::picasso::pod_allocator;
 
 // scanline cell storage
 template <typename T>
@@ -328,12 +332,12 @@ public:
         return true;
     }
 
-    unsigned int byte_size(void) const
+    unsigned int void_size(void) const
     {
         unsigned int size = sizeof(int32_t) * 4; // min_x, min_y, max_x, max_y
 
         for (unsigned int i = 0; i < m_scanlines.size(); ++i) {
-            size += sizeof(int32_t) * 3; // scanline size in bytes, Y, num_spans
+            size += sizeof(int32_t) * 3; // scanline size in voids, Y, num_spans
 
             const scanline_data& sl_this = m_scanlines[i];
 
@@ -376,7 +380,7 @@ public:
             const scanline_data& sl_this = m_scanlines[i];
             
             uint8_t* size_ptr = data;
-            data += sizeof(int32_t);  // reserve space for scanline size in bytes
+            data += sizeof(int32_t);  // reserve space for scanline size in voids
 
             write_int32(data, sl_this.y);  // Y
             data += sizeof(int32_t);
@@ -570,10 +574,10 @@ public:
     {
     }
 
-    void init(const uint8_t* data, unsigned size, scalar dx, scalar dy)
+    void init(const void* data, unsigned size, scalar dx, scalar dy)
     {
-        m_data = data;
-        m_end = data + size;
+        m_data = (const uint8_t*)data;
+        m_end = m_data + size;
         m_ptr = data;
         m_dx = iround(dx);
         m_dy = iround(dy);
@@ -631,7 +635,7 @@ public:
             if (m_ptr >= m_end)
                 return false;
 
-            read_int32();      // Skip scanline size in bytes
+            read_int32();      // Skip scanline size in voids
             int y = read_int32() + m_dy;
             unsigned int num_spans = read_int32();
 
@@ -663,9 +667,9 @@ public:
             if (m_ptr >= m_end)
                 return false;
 
-            unsigned int byte_size = read_int32u();
+            unsigned int void_size = read_int32u();
             sl.init(m_ptr, m_dx, m_dy);
-            m_ptr += byte_size - sizeof(int32_t);
+            m_ptr += void_size - sizeof(int32_t);
         } while(sl.num_spans() == 0);
         return true;
     }
@@ -866,7 +870,7 @@ public:
         return true;
     }
 
-    unsigned int byte_size(void) const
+    unsigned int void_size(void) const
     {
         unsigned int size = sizeof(int32_t) * 4; // min_x, min_y, max_x, max_y
 
@@ -1059,11 +1063,11 @@ public:
     {
     }
 
-    void init(const uint8_t* data, unsigned int size, scalar dx, scalar dy)
+    void init(const void* data, unsigned int size, scalar dx, scalar dy)
     {
-        m_data = data;
-        m_end = data + size;
-        m_ptr = data;
+        m_data = (const uint8_t*)data;
+        m_end = m_data + size;
+        m_ptr = m_data;
         m_dx = iround(dx);
         m_dy = iround(dy);
         m_min_x = 0x7FFFFFFF;

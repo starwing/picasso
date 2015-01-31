@@ -7,10 +7,10 @@
 #ifndef _GFX_IMAGE_FILTERS_H_
 #define _GFX_IMAGE_FILTERS_H_
 
-#include "common.h"
-#include "data_vector.h"
-#include "interfaces.h"
-#include "graphic_base.h"
+#include "../core/common.h"
+#include "../core/data_vector.h"
+#include "../core/interfaces.h"
+#include "../core/graphic_base.h"
 
 namespace gfx {
 

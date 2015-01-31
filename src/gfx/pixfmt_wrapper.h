@@ -7,7 +7,7 @@
 #ifndef _PIXFMT_WRAPPER_H_
 #define _PIXFMT_WRAPPER_H_
 
-#include "common.h"
+#include "../core/common.h"
 
 #include "gfx_mask_layer.h"
 #include "gfx_image_accessors.h"
@@ -114,17 +114,17 @@ public:
     int      stride() const { return m_fmt.stride(); }
 
     //--------------------------------------------------------------------
-    byte* row_ptr(int y)       { return m_fmt.row_ptr(y); }
-    const byte* row_ptr(int y) const { return m_fmt.row_ptr(y); }
+    uint8_t* row_ptr(int y)       { return m_fmt.row_ptr(y); }
+    const uint8_t* row_ptr(int y) const { return m_fmt.row_ptr(y); }
     row_data     row(int y)     const { return m_fmt.row(y); }
 
     //--------------------------------------------------------------------
-    byte* pix_ptr(int x, int y)
+    uint8_t* pix_ptr(int x, int y)
     {
         return m_fmt.pix_ptr(x, y);
     }
 
-    const byte* pix_ptr(int x, int y) const
+    const uint8_t* pix_ptr(int x, int y) const
     {
         return m_fmt.pix_ptr(x, y);
     }
@@ -138,7 +138,7 @@ public:
     unsigned comp_op() const  { return m_fmt.blend_op(); }
 
     //--------------------------------------------------------------------
-    static void make_pix(byte* p, const color_type& c)
+    static void make_pix(uint8_t* p, const color_type& c)
     {
         pixfmt_type::make_pix(p, c);
     }
@@ -526,9 +526,9 @@ public:
 
     pattern_wrapper() {}
     virtual ~pattern_wrapper() {}
-    virtual const byte* span(int x, int y, unsigned) = 0;
-    virtual const byte* next_x() = 0;
-    virtual const byte* next_y() = 0;
+    virtual const uint8_t* span(int x, int y, unsigned) = 0;
+    virtual const uint8_t* next_x() = 0;
+    virtual const uint8_t* next_y() = 0;
 };
 
 template<typename Pixfmt, typename Wrap_X, typename Wrap_Y>
@@ -539,15 +539,15 @@ public:
         : m_wrap(fmt)
     {
     }
-    virtual const byte* span(int x, int y, unsigned i)
+    virtual const uint8_t* span(int x, int y, unsigned i)
     {
         return m_wrap.span(x, y, i);
     }
-    virtual const byte* next_x()
+    virtual const uint8_t* next_x()
     {
         return m_wrap.next_x();
     }
-    virtual const byte* next_y()
+    virtual const uint8_t* next_y()
     {
         return m_wrap.next_y();
     }

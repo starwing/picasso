@@ -5,8 +5,8 @@
  */
 
 #include <stdio.h>
-#include "common.h"
-#include "convert.h"
+#include "../core/common.h"
+#include "../core/convert.h"
 #include "gfx_font_adapter.h"
 #include "gfx_rasterizer_scanline.h"
 #include "gfx_scanline.h"
@@ -14,10 +14,10 @@
 #include "gfx_scanline_storage.h"
 #include "gfx_trans_affine.h"
 
-#if defined(WIN32) && !ENABLE(FREE_TYPE2)
+#if defined(_WIN32) && !ENABLE_FREETYPE2
 #include <windows.h>
-#include "graphic_path.h"
-#include "graphic_helper.h"
+#include "../core/graphic_path.h"
+#include "../core/graphic_helper.h"
 
 namespace gfx {
 
@@ -271,7 +271,7 @@ static void decompose_win32_glyph_bitmap_mono(const char* gbuf, int w, int h, in
                                 bool flip_y, gfx_scanline_bin& sl, gfx_scanline_storage_bin& storage)
 {
     int pitch = ((w + 31) >> 5) << 2;
-    const byte* buf = (const byte*)gbuf;
+    const uint8_t* buf = (const uint8_t*)gbuf;
     sl.reset(x, x + w);
     storage.prepare();
 
@@ -426,7 +426,7 @@ bool gfx_font_adapter::prepare_glyph(unsigned int code)
                         m_impl->flip_y, m_impl->matrix, m_impl->cur_font_path))
             {
                 m_impl->cur_bound_rect = get_bounding_rect(m_impl->cur_font_path);
-                m_impl->cur_data_size = m_impl->cur_font_path.total_byte_size()+sizeof(unsigned int);//count data
+                m_impl->cur_data_size = m_impl->cur_font_path.total_void_size()+sizeof(unsigned int);//count data
                 return true;
             }
         } else {
@@ -442,7 +442,7 @@ bool gfx_font_adapter::prepare_glyph(unsigned int code)
                         m_impl->cur_font_scanlines_bin.min_y(),
                         m_impl->cur_font_scanlines_bin.max_x() + 1,
                         m_impl->cur_font_scanlines_bin.max_y() + 1);
-                m_impl->cur_data_size = m_impl->cur_font_scanlines_bin.byte_size(); 
+                m_impl->cur_data_size = m_impl->cur_font_scanlines_bin.void_size(); 
                 return true;
             } else { // bitmap create by own rastering
                 m_impl->cur_font_path.remove_all();
@@ -462,7 +462,7 @@ bool gfx_font_adapter::prepare_glyph(unsigned int code)
                                                   m_impl->cur_font_scanlines_bin.min_y(),
                                                   m_impl->cur_font_scanlines_bin.max_x() + 1,
                                                   m_impl->cur_font_scanlines_bin.max_y() + 1);
-                    m_impl->cur_data_size = m_impl->cur_font_scanlines_bin.byte_size(); 
+                    m_impl->cur_data_size = m_impl->cur_font_scanlines_bin.void_size(); 
                     return true;
                 }
             }
@@ -471,16 +471,16 @@ bool gfx_font_adapter::prepare_glyph(unsigned int code)
     return false;
 }
 
-void gfx_font_adapter::write_glyph_to(byte* buffer)
+void gfx_font_adapter::write_glyph_to(void* buffer)
 {
-    if (buffer && m_impl->cur_data_size) {
+    uint8_t *p = (uint8_t*)buffer;
+    if (p && m_impl->cur_data_size) {
         if (m_impl->cur_data_type == glyph_type_outline) {
             unsigned int count = m_impl->cur_font_path.total_vertices();
-            memcpy(buffer, &count, sizeof(unsigned int));
-            buffer += sizeof(unsigned int);
-            m_impl->cur_font_path.serialize_to(buffer);
+            memcpy(p, &count, sizeof(unsigned int));
+            m_impl->cur_font_path.serialize_to(p + sizeof(unsigned int));
         } else { // mono glyph
-            m_impl->cur_font_scanlines_bin.serialize(buffer);
+            m_impl->cur_font_scanlines_bin.serialize(p);
         }
     }
 }
@@ -515,7 +515,7 @@ scalar gfx_font_adapter::advance_y(void) const
     return m_impl->cur_advance_y;
 }
 
-void* gfx_font_adapter::create_storage(byte* buf, unsigned int len, scalar x, scalar y)
+void* gfx_font_adapter::create_storage(void* buf, unsigned int len, scalar x, scalar y)
 {
     m_impl->cur_font_storage_bin.init(buf, len, SCALAR_TO_FLT(x), SCALAR_TO_FLT(y));
     return (void*)&m_impl->cur_font_storage_bin;

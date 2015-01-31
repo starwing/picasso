@@ -4,8 +4,6 @@
  * Contact: onecoolx@gmail.com
  */
 
-#include "common.h"
-#include "picasso.h"
 #include "picasso_global.h"
 #include "picasso_matrix.h"
 #include "picasso_objects.h"
@@ -14,15 +12,15 @@
 extern "C" {
 #endif
 
-ps_pattern* PICAPI ps_pattern_create_image(const ps_image* img, ps_wrap_type xp, ps_wrap_type yp, const ps_matrix* m)
+PIC_API ps_pattern* ps_pattern_create_image(const ps_image* img, ps_wrap_type xp, ps_wrap_type yp, const ps_matrix* m)
 {
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
+        picasso_status = STATUS_DEVICE_ERROR;
         return 0;
     }
 
     if (!img) {
-        global_status = STATUS_INVALID_ARGUMENT;
+        picasso_status = STATUS_INVALID_ARGUMENT;
         return 0;
     }
 
@@ -37,40 +35,40 @@ ps_pattern* PICAPI ps_pattern_create_image(const ps_image* img, ps_wrap_type xp,
         p->xtype = xp;
         p->ytype = yp;
         p->img = ps_image_ref(const_cast<ps_image*>(img));
-        global_status = STATUS_SUCCEED;
+        picasso_status = STATUS_SUCCEED;
         return p;
     } else {
-        global_status = STATUS_OUT_OF_MEMORY;
+        picasso_status = STATUS_OUT_OF_MEMORY;
         return 0;
     }
 }
 
-ps_pattern* PICAPI ps_pattern_ref(ps_pattern* pattern)
+PIC_API ps_pattern* ps_pattern_ref(ps_pattern* pattern)
 {
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
+        picasso_status = STATUS_DEVICE_ERROR;
         return 0;
     }
 
     if (!pattern) {
-        global_status = STATUS_INVALID_ARGUMENT;
+        picasso_status = STATUS_INVALID_ARGUMENT;
         return 0;
     }
 
     pattern->refcount++;
-    global_status = STATUS_SUCCEED;
+    picasso_status = STATUS_SUCCEED;
     return pattern;
 }
 
-void PICAPI ps_pattern_unref(ps_pattern* pattern)
+PIC_API void ps_pattern_unref(ps_pattern* pattern)
 {
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
+        picasso_status = STATUS_DEVICE_ERROR;
         return;
     }
 
     if (!pattern) {
-        global_status = STATUS_INVALID_ARGUMENT;
+        picasso_status = STATUS_INVALID_ARGUMENT;
         return;
     }
 
@@ -79,23 +77,23 @@ void PICAPI ps_pattern_unref(ps_pattern* pattern)
         ps_image_unref(pattern->img);
         mem_free(pattern);
     }
-    global_status = STATUS_SUCCEED;
+    picasso_status = STATUS_SUCCEED;
 }
 
-void PICAPI ps_pattern_transform(ps_pattern* p, const ps_matrix* m)
+PIC_API void ps_pattern_transform(ps_pattern* p, const ps_matrix* m)
 {
     if (!picasso::is_valid_system_device()) {
-        global_status = STATUS_DEVICE_ERROR;
+        picasso_status = STATUS_DEVICE_ERROR;
         return;
     }
 
     if (!p || !m) {
-        global_status = STATUS_INVALID_ARGUMENT;
+        picasso_status = STATUS_INVALID_ARGUMENT;
         return;
     }
 
     p->matrix *= m->matrix;
-    global_status = STATUS_SUCCEED;
+    picasso_status = STATUS_SUCCEED;
 }
 
 #ifdef __cplusplus

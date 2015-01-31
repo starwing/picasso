@@ -7,9 +7,9 @@
 #ifndef _GFX_DEVICE_H_
 #define _GFX_DEVICE_H_
 
-#include "common.h"
-#include "device.h"
-#include "interfaces.h"
+#include "../core/common.h"
+#include "../core/device.h"
+#include "../core/interfaces.h"
 
 namespace gfx {
 
@@ -29,11 +29,11 @@ public:
     virtual abstract_raster_adapter* create_raster_adapter(void);
     virtual void destroy_raster_adapter(abstract_raster_adapter* d);
 
-    virtual abstract_rendering_buffer* create_rendering_buffer(byte* buf, 
+    virtual abstract_rendering_buffer* create_rendering_buffer(void* buf, 
                                     unsigned int width, unsigned int height, int stride);
     virtual void destroy_rendering_buffer(abstract_rendering_buffer* b);
 
-    virtual abstract_mask_layer* create_mask_layer(byte* buf,
+    virtual abstract_mask_layer* create_mask_layer(void* buf,
                                     unsigned int width, unsigned int height, int stride);
     virtual void destroy_mask_layer(abstract_mask_layer* m);
 

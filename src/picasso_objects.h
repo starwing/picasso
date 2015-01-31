@@ -7,11 +7,12 @@
 #ifndef _PICASSO_OBJS_H_
 #define _PICASSO_OBJS_H_
 
-#include "common.h"
-#include "math_type.h"
-#include "data_vector.h"
-#include "graphic_base.h"
-#include "graphic_path.h"
+#include "core/common.h"
+#include "core/math_type.h"
+#include "core/data_vector.h"
+#include "core/graphic_base.h"
+#include "core/graphic_path.h"
+
 #include "picasso_matrix.h"
 #include "picasso_mask.h"
 #include "picasso_font.h"
@@ -469,8 +470,8 @@ struct _ps_context {
     int refcount;
     ps_canvas* canvas;
     picasso::context_state* state;
-    ps_bool font_antialias;   
-    ps_bool font_kerning;   
+    int font_antialias;   
+    int font_kerning;   
     ps_text_type font_render_type;
     struct _ps_context* parent;
     picasso::font_engine* fonts; 

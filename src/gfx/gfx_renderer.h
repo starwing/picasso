@@ -7,8 +7,8 @@
 #ifndef _GFX_RENDERER_H_
 #define _GFX_RENDERER_H_
 
-#include "common.h"
-#include "graphic_helper.h"
+#include "../core/common.h"
+#include "../core/graphic_helper.h"
 
 namespace gfx {
 

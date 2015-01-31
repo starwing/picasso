@@ -7,7 +7,7 @@
 #ifndef _GFX_RASTERIZER_SCANLINE_H_
 #define _GFX_RASTERIZER_SCANLINE_H_
 
-#include "common.h"
+#include "../core/common.h"
 
 #include "gfx_rasterizer_cell.h"
 #include "gfx_rasterizer_clip.h"

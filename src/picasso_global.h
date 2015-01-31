@@ -7,11 +7,15 @@
 #ifndef _PICASSO_GLOBAL_H_
 #define _PICASSO_GLOBAL_H_
 
-#include "common.h"
-#include "math_type.h"
-#include "data_vector.h"
-#include "fixedopt.h"
+#include "core/common.h"
+#include "core/device.h"
+#include "core/math_type.h"
+#include "core/data_vector.h"
+#include "core/fixedopt.h"
 
+#ifndef PICASSO_LIB
+#  define PICASSO_LIB
+#endif
 #include "picasso.h"
 
 //this can be replace by hw buffer!
@@ -26,6 +30,6 @@
 
 
 // global error code
-extern "C" ps_status global_status;
+extern "C" PIC_API ps_status picasso_status;
 
 #endif /*_PICASSO_GLOBAL_H_*/
